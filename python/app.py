@@ -1,9 +1,10 @@
 import requests
 from bs4 import BeautifulSoup
+import pandas as pd
 
 def scrape_amazon_page(url):
     headers = {
-        "User-Agent": "Your User Agent String",
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
     }
 
     response = requests.get(url, headers=headers)
@@ -28,21 +29,36 @@ def scrape_amazon_page(url):
         availability_element = soup.select_one('.a-size-medium.a-color-success')
         availability = availability_element.text.strip() if availability_element else 'N/A'
 
-        # Print the results to the terminal
-        print(f'URL: {url}')
-        print(f'Title: {title}')
-        print(f'Price: {price}')
-        print(f'Rating: {rating}')
-        print(f'Availability: {availability}')
-        print('-' * 30)
+        # Return the results as a dictionary
+        return {
+            'URL': url,
+            'Title': title,
+            'Price': price,
+            'Rating': rating,
+            'Availability': availability
+        }
     else:
         print(f"Failed to retrieve the page. Status code: {response.status_code}")
+        return None
 
 if __name__ == "__main__":
+    # List to hold all scraped data
+    data = []
+
     # Prompt the user to enter Amazon product URLs
     print("Enter Amazon product URLs one by one. Type 'done' to finish.")
     while True:
         url = input("Enter an Amazon product URL: ").strip()
         if url.lower() == 'done':
             break
-        scrape_amazon_page(url)
+        result = scrape_amazon_page(url)
+        if result:
+            data.append(result)
+
+    # Create a DataFrame from the list of dictionaries
+    df = pd.DataFrame(data)
+
+    # Save the DataFrame to an Excel file
+    df.to_excel('amz.xlsx', index=False)
+
+    print('Scraped data has been saved to amazon_products.xlsx')
