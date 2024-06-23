@@ -1,6 +1,9 @@
 import requests
 from bs4 import BeautifulSoup
 import pandas as pd
+import datetime
+import os.path
+import xlwings as xw
 
 def scrape_amazon_page(url):
     headers = {
@@ -29,8 +32,10 @@ def scrape_amazon_page(url):
         availability_element = soup.select_one('.a-size-medium.a-color-success')
         availability = availability_element.text.strip() if availability_element else 'N/A'
 
-        # Return the results as a dictionary
+        # Add timestamp to the returned dictionary
+        timestamp = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         return {
+            'Timestamp': timestamp,
             'URL': url,
             'Title': title,
             'Price': price,
@@ -58,7 +63,26 @@ if __name__ == "__main__":
     # Create a DataFrame from the list of dictionaries
     df = pd.DataFrame(data)
 
-    # Save the DataFrame to an Excel file
-    df.to_excel('amz.xlsx', index=False)
+    # Check if the file exists to append data
+    filename = 'amz.xlsx'
 
-    print('Scraped data has been saved to amazon_products.xlsx')
+    if os.path.isfile(filename):
+        # If file exists, append data to it
+        wb = xw.Book(filename)
+        sheet = wb.sheets[0]
+
+        # Find the next empty row in column A
+        next_row = sheet.range('A' + str(sheet.cells.last_cell.row)).end('up').row + 1
+
+        # Write DataFrame to Excel starting from the next empty row
+        sheet.range('A' + str(next_row)).value = df.values.tolist()
+
+        # Save and close the workbook
+        wb.save()
+        wb.close()
+    else:
+        # If file doesn't exist, create a new Excel file and save data to it
+        df.to_excel(filename, index=False)
+        print(f'Created new file {filename} and saved scraped data')
+
+    print(f'Scraped data has been saved to {filename}')
