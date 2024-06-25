@@ -3,7 +3,7 @@ import axios from 'axios';
 import { ExternalLinkIcon, TrashIcon } from '@heroicons/react/outline';
 import AddURL from './AddUrl';
 
-const URLList = () => {
+const FlipkartURLList = () => {
   const [urls, setUrls] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -13,7 +13,7 @@ const URLList = () => {
 
   const fetchUrls = async () => {
     try {
-      const response = await axios.get('http://localhost:3000/api/urls');
+      const response = await axios.get('http://localhost:3000/api/flipkart');
       setUrls(response.data);
       setLoading(false);
     } catch (error) {
@@ -24,7 +24,7 @@ const URLList = () => {
 
   const handleDelete = async (id) => {
     try {
-      await axios.delete(`http://localhost:3000/api/urls/${id}`);
+      await axios.delete(`http://localhost:3000/api/flipkart/${id}`);
       setUrls(urls.filter((url) => url._id !== id));
     } catch (error) {
       console.error('Error deleting URL:', error);
@@ -32,8 +32,8 @@ const URLList = () => {
   };
 
   return (
-    <div className="bg-white p-4 rounded-lg shadow-md h-auto ">
-      <h2 className="text-2xl font-bold mb-4">URL List</h2>
+    <div className="bg-white p-4 rounded-lg shadow-md">
+      <h2 className="text-2xl font-bold mb-4">Flipkart URL List</h2>
       <div className="mb-6">
         <AddURL fetchUrls={fetchUrls} />
       </div>
@@ -49,10 +49,10 @@ const URLList = () => {
               <li key={url._id} className="border-b border-gray-200 py-4">
                 <div className="cursor-pointer mb-2" onClick={() => window.open(url.url, '_blank')}>
                   <p className="text-lg font-semibold mb-1">{latestData.title || 'N/A'}</p>
-                  <p className="text-black  text-md font-semibold mb-1">{<latestData className="price"></latestData> ? `Price: ${latestData.price}` : 'Not listed Currently  '}</p>
-                  <p className="text-gray-600 mb-1">{url.createdAt ? new Date(url.createdAt).toLocaleString() : 'N/A'}</p>
-                  <p className="text-gray-600 text-sm">{latestData.rating ? `Rating: ${latestData.rating}` : 'No ratings yet '}</p>
-                  <p className="text-gray-600 text-sm">{latestData.availability ? `Avail.: ${latestData.availability}` : 'Out of Stock '}</p>
+                  <p className="text-black text-md font-semibold mb-1">{latestData.price !== 'N/A' ? `Price: ${latestData.price}` : 'Not listed Currently'}</p>
+                  <p className="text-gray-600 mb-1">{new Date(url.createdAt).toLocaleString()}</p>
+                  <p className="text-gray-600 text-sm">{latestData.rating !== 'N/A' ? `Rating: ${latestData.rating}` : 'No ratings yet'}</p>
+                  <p className="text-gray-600 text-sm">{latestData.availability !== 'N/A' ? `Availability: ${latestData.availability}` : 'Out of Stock'}</p>
                 </div>
                 <div className="flex items-center justify-between">
                   <button onClick={() => handleDelete(url._id)} className="flex items-center text-red-500 hover:text-red-600 focus:outline-none">
@@ -73,4 +73,4 @@ const URLList = () => {
   );
 };
 
-export default URLList;
+export default FlipkartURLList;

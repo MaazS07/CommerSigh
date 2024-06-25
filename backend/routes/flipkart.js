@@ -2,12 +2,12 @@ const express = require('express');
 const router = express.Router();
 const axios = require('axios');
 const cheerio = require('cheerio');
-const Url = require('../model/Url');
+const FlipkartUrl = require('../model/FlipkartURL');
 
-// Get all URLs and perform scraping
+// Get all Flipkart URLs and perform scraping
 router.get('/', async (req, res) => {
     try {
-        const urls = await Url.find();
+        const urls = await FlipkartUrl.find();
 
         // Perform scraping for each URL
         for (let urlObj of urls) {
@@ -20,33 +20,37 @@ router.get('/', async (req, res) => {
             if (response.status === 200) {
                 const $ = cheerio.load(response.data);
 
-                const title = $('#productTitle').text().trim() || 'N/A';
-                const price = $('.a-price-whole').first().text().trim() || 'N/A';
-                const rating = $('a.a-popover-trigger.a-declarative span.a-size-base.a-color-base').text().trim() || 'N/A';
-                const availability = $('.a-size-medium.a-color-success').text().trim() || 'N/A';
-                 let createdAt= new Date()
-                // Update the data array with the latest information
-                urlObj.data.push({
+                const title = $('span.VU-ZEz').text().trim() || 'N/A';
+                const price = $('div.Nx9bqj.CxhGGd').text().trim() || 'N/A';
+                const rating = $('span').filter(function() {
+                    return $(this).text().includes('Ratings');
+                }).text().trim() || 'N/A';
+                const availability = $('div.Z8JjpR').text().trim() || 'In Stock';
+
+                // Prepare new scraping data
+                const scrapingData = {
                     title,
                     price,
                     rating,
                     availability,
-                    createdAt
-                });
+                };
+
+                // Update URL object with new data
+                urlObj.data.push(scrapingData);
 
                 await urlObj.save();
             }
         }
 
         // After scraping is done, send the updated URLs to frontend
-        const updatedUrls = await Url.find();
+        const updatedUrls = await FlipkartUrl.find();
         res.json(updatedUrls);
     } catch (err) {
         res.status(500).json({ message: err.message });
     }
 });
 
-// Add a new URL
+// Add a new Flipkart URL
 router.post('/', async (req, res) => {
     const { url } = req.body;
 
@@ -55,12 +59,12 @@ router.post('/', async (req, res) => {
     }
 
     try {
-        const existingUrl = await Url.findOne({ url });
+        const existingUrl = await FlipkartUrl.findOne({ url });
         if (existingUrl) {
             return res.status(400).json({ message: 'URL already exists' });
         }
 
-        const newUrl = new Url({ url });
+        const newUrl = new FlipkartUrl({ url });
         await newUrl.save();
         res.status(201).json(newUrl);
     } catch (err) {
@@ -68,10 +72,10 @@ router.post('/', async (req, res) => {
     }
 });
 
-// Delete a URL
+// Delete a Flipkart URL
 router.delete('/:id', async (req, res) => {
     try {
-        await Url.findByIdAndDelete(req.params.id);
+        await FlipkartUrl.findByIdAndDelete(req.params.id);
         res.json({ message: 'Deleted URL' });
     } catch (err) {
         res.status(500).json({ message: err.message });

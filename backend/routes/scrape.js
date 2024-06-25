@@ -9,27 +9,37 @@ router.post('/', async (req, res) => {
     const urls = await Url.find();
 
     for (let urlObj of urls) {
-      const response = await axios.get(urlObj.url, {
-        headers: {
-          "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
+      try {
+        const response = await axios.get(urlObj.url, {
+          headers: {
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
+          }
+        });
+
+        if (response.status === 200) {
+          const $ = cheerio.load(response.data);
+
+          const title = $('#productTitle').text().trim() || 'N/A';
+          const price = $('.a-price-whole').first().text().trim() || 'N/A';
+          const rating = $('a.a-popover-trigger.a-declarative span.a-size-base.a-color-base').text().trim() || 'N/A';
+          const availability = $('.a-size-medium.a-color-success').text().trim() || 'N/A';
+
+          console.log(`Title: ${title}, Price: ${price}, Rating: ${rating}, Availability: ${availability}`);
+
+          urlObj.data.push({
+            title: title,
+            price: price,
+            rating: rating,
+            availability: availability,
+            createdAt: new Date()
+          });
+
+          await urlObj.save();
+        } else {
+          console.log(`Failed to fetch data for URL: ${urlObj.url}`);
         }
-      });
-
-      if (response.status === 200) {
-        const $ = cheerio.load(response.data);
-
-        const title = $('#productTitle').text().trim() || 'N/A';
-        const price = $('.a-price-whole').first().text().trim() || 'N/A';
-        const rating = $('a.a-popover-trigger.a-declarative span.a-size-base.a-color-base').text().trim() || 'N/A';
-        const availability = $('.a-size-medium.a-color-success').text().trim() || 'N/A';
-
-        urlObj.title = title;
-        urlObj.price = price;
-        urlObj.rating = rating;
-        urlObj.availability = availability;
-        urlObj.createdAt = new Date();
-
-        await urlObj.save();
+      } catch (error) {
+        console.error(`Error scraping URL: ${urlObj.url}`, error);
       }
     }
 
