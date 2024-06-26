@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { ExternalLinkIcon, TrashIcon } from '@heroicons/react/outline';
-import AddURL from './AddUrl';
+
 
 const FlipkartURLList = () => {
   const [urls, setUrls] = useState([]);

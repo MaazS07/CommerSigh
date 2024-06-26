@@ -15,10 +15,10 @@ mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
 
 // Routes
 const urlsRoute = require('./routes/urls');
-// const scrapeRoute = require('./routes/scrape');
+const scrapeRoute = require('./routes/scrape');
 const flipkartRoute =require('./routes/flipkart')
 app.use('/api/urls', urlsRoute);
-// app.use('/api/scrape', scrapeRoute);
+app.use('/api/scrape', scrapeRoute);
 app.use('/api/flipkart',flipkartRoute)
 app.listen(port, () => {
     console.log(`Server running on port ${port}`);

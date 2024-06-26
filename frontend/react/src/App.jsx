@@ -1,16 +1,14 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import AddURL from './components/AddUrl';
-import URLList from './components/URLlist';
 import ScrapeInfo from './components/ScrapeInfo';
 import FlipkartURLList from './components/Flipkart';
+import AmazonURLList from './components/AmazonURLlist';
 
 function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<URLList />} />
-        <Route path="/flipkart" element={<FlipkartURLList />} />
+        <Route path="/" element={<AmazonURLList />} />
         <Route path="/info" element={<ScrapeInfo />} />
       </Routes>
     </Router>
