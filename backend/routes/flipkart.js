@@ -15,19 +15,29 @@ router.get('/', async (req, res) => {
             try {
                 const response = await axios.get(urlObj.url, {
                     headers: {
-                        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
+                        
+                            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
+                            "Accept-Language": "en-US,en;q=0.5",
+                            "Referer": "https://www.flipkart.com/",
+                            "DNT": "1",  
+                            "Connection": "keep-alive"
+                        
                     }
                 });
 
                 if (response.status === 200) {
                     const $ = cheerio.load(response.data);
 
-                    const title = $('span.VU-ZEz').text().trim() || 'N/A';
+                    const title = $('.VU-ZEz').text().trim() || 'N/A';
                     const price = $('div.Nx9bqj.CxhGGd').text().trim() || 'N/A';
-                    const rating = $('span').filter(function() {
-                        return $(this).text().includes('Ratings');
-                    }).text().trim() || 'N/A';
-                    const availability = $('div._1_WHN1').text().trim() || 'In Stock';
+                    const rating = $('div.XQDdHH').text().trim() || 'N/A';
+                    let availability
+                    if($('div.nbiUlm').text().trim()){
+                     availability = "Out of Stock"
+                    }
+                     else
+                     {availability='In Stock'
+                     };
 
                     const newData = {
                         title,
