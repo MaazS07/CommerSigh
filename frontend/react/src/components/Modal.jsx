@@ -1,12 +1,35 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 
-const Modal = ({ isOpen, onClose }) => {
+const Modal = ({ isOpen, onClose, title }) => {
   const [inputValue, setInputValue] = useState('');
+  const [rank, setRank] = useState(null); // State to hold the rank received from backend
 
   const handleSubmit = () => {
     // Handle form submission or any action needed
-    console.log('Submitted:', inputValue);
-    // You can add your logic here for handling the input value
+    console.log('Submitted:', inputValue); // Log the input value
+    console.log('Title:', title); // Log the title received from props
+    alert(`Submitted: ${inputValue}\nTitle: ${title}`); // Show alert with input value and title
+    
+    // Prepare data to send to backend
+    const data = {
+      title: title, // Pass the title received as prop
+      keyword: inputValue // Pass the input value as keyword
+    };
+
+    // Send POST request using axios
+    axios.post('http://localhost:3000/api/flipkart/ranking', data)
+      .then(response => {
+        const receivedRank = response.data.rank;
+        console.log('Rank:', receivedRank); // Log the rank received from backend
+        setRank(receivedRank); // Set the rank in state to display it
+        alert(`Rank: ${receivedRank}`); // Show alert with the rank received from backend
+      })
+      .catch(error => {
+        console.error('Error:', error);
+        alert('Error fetching rank from server.'); // Show alert if there's an error
+      });
+
     onClose(); // Close modal after handling action
   };
 
@@ -28,7 +51,7 @@ const Modal = ({ isOpen, onClose }) => {
                   <input
                     type="text"
                     className="w-full border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-                    placeholder="Enter URL here"
+                    placeholder="Enter keyword here"
                     value={inputValue}
                     onChange={(e) => setInputValue(e.target.value)}
                   />
@@ -36,6 +59,11 @@ const Modal = ({ isOpen, onClose }) => {
               </div>
             </div>
           </div>
+          {rank !== null && (
+            <div className="bg-white px-4 py-5 sm:px-6">
+              <h2 className="text-xl font-bold text-gray-800 text-center mb-4">Rank: {rank}</h2>
+            </div>
+          )}
           <div className="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
             <button
               type="button"

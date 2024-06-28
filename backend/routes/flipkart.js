@@ -1,9 +1,10 @@
-// routes/flipkart.js
 const express = require('express');
 const router = express.Router();
 const axios = require('axios');
 const cheerio = require('cheerio');
-const FlipkartURL = require('../model/FlipkartURL'); // Correct import statement
+
+// Model import
+const FlipkartURL = require('../model/FlipkartURL');
 
 // GET all Flipkart URLs and perform scraping
 router.get('/', async (req, res) => {
@@ -15,13 +16,11 @@ router.get('/', async (req, res) => {
             try {
                 const response = await axios.get(urlObj.url, {
                     headers: {
-                        
-                            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
-                            "Accept-Language": "en-US,en;q=0.5",
-                            "Referer": "https://www.flipkart.com/",
-                            "DNT": "1",  
-                            "Connection": "keep-alive"
-                        
+                        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
+                        "Accept-Language": "en-US,en;q=0.5",
+                        "Referer": "https://www.flipkart.com/",
+                        "DNT": "1",
+                        "Connection": "keep-alive"
                     }
                 });
 
@@ -32,12 +31,11 @@ router.get('/', async (req, res) => {
                     const price = $('div.Nx9bqj.CxhGGd').text().trim() || 'N/A';
                     const rating = $('div.XQDdHH').text().trim() || 'N/A';
                     let availability
-                    if($('div.nbiUlm').text().trim()){
-                     availability = "Out of Stock"
-                    }
-                     else
-                     {availability='In Stock'
-                     };
+                    if ($('div.nbiUlm').text().trim()) {
+                        availability = "Out of Stock"
+                    } else {
+                        availability = 'In Stock'
+                    };
 
                     const newData = {
                         title,
@@ -101,5 +99,55 @@ router.delete('/:id', async (req, res) => {
         res.status(500).json({ message: err.message });
     }
 });
+
+// POST to get ranking
+router.post('/ranking', async (req, res) => {
+    const { title, keyword } = req.body;
+
+    try {
+        const searchUrl = `https://www.flipkart.com/search?q=${encodeURIComponent(keyword)}&otracker=search&otracker1=search&marketplace=FLIPKART&as-show=on&as=off`;
+
+        const response = await axios.get(searchUrl, {
+            headers: {
+                "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
+                "Accept-Language": "en-US,en;q=0.5",
+                "Referer": "https://www.flipkart.com/",
+                "DNT": "1",
+                "Connection": "keep-alive"
+            }
+        });
+
+        if (response.status === 200) {
+            const $ = cheerio.load(response.data);
+            const items = $('div.tUxRFH');
+            console.log(items)
+
+            let rank = -1;
+
+            items.each((index, element) => {
+                const itemTitle = $(element).find('div.KzDlHZ').text().trim();
+                console.log(itemTitle)
+                if (itemTitle.includes(title)) {
+                    rank = index + 1;
+                    return false; // Exit the each loop
+                }
+            });
+
+            if (rank !== -1) {
+                res.status(200).json({ rank });
+            } else {
+                res.status(404).json({ message: 'Product not found in search results' });
+            }
+        } else {
+            console.error(`Failed to fetch search results from Flipkart`);
+            res.status(500).json({ message: 'Failed to fetch search results from Flipkart' });
+        }
+    } catch (error) {
+        console.error('Error fetching Flipkart search results:', error.message);
+        res.status(500).json({ message: 'Error fetching Flipkart search results' });
+    }
+});
+
+
 
 module.exports = router;

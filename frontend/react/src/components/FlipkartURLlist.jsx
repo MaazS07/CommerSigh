@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { ExternalLinkIcon, TrashIcon,DownloadIcon } from '@heroicons/react/outline';
+import { ExternalLinkIcon, TrashIcon, DownloadIcon } from '@heroicons/react/outline';
 import { toast, Toaster } from 'react-hot-toast';
 import FlipkartAddURL from './FlipkartAddURL';
 import Modal from './Modal';
@@ -101,14 +101,13 @@ const FlipkartURLList = () => {
             </div>
             <div className="border-t border-gray-200">
               <div className="flex justify-end mb-4">
-              <button
-  onClick={exportToExcel}
-  className=" m-10  mb-0 flex items-center bg-green-900 text-white px-4 py-2 rounded-md hover:bg-green-600 focus:outline-none transition duration-150 ease-in-out"
->
-  <DownloadIcon className="h-5 w-5 text-white bolder mr-2" />
-  Excel
-</button>
-
+                <button
+                  onClick={exportToExcel}
+                  className="m-10 mb-0 flex items-center bg-green-900 text-white px-4 py-2 rounded-md hover:bg-green-600 focus:outline-none transition duration-150 ease-in-out"
+                >
+                  <DownloadIcon className="h-5 w-5 text-white bolder mr-2" />
+                  Excel
+                </button>
               </div>
               <h2 className="text-2xl font-semibold p-6 pb-3">Tracked URLs</h2>
               {loading ? (
@@ -124,7 +123,7 @@ const FlipkartURLList = () => {
                         <div className="cursor-pointer mb-4" onClick={() => openModal(url)}>
                           <h3 className="text-xl font-semibold mb-2">{latestData.title || 'N/A'}</h3>
                           <p className="text-2xl font-bold text-green-600 mb-2">
-                            {latestData.price ? `${latestData.price}` : 'Not listed currently'}
+                            {latestData.price ? `₹${latestData.price.slice(1,)}` : 'Not listed currently'}
                           </p>
                           <p className="text-sm text-gray-600 mb-1">
                             Last updated: {url.createdAt ? new Date(url.createdAt).toLocaleString() : 'N/A'}
@@ -163,8 +162,13 @@ const FlipkartURLList = () => {
           </div>
         </div>
       </div>
-      {/* Render Modal if isModalOpen is true */}
-      {isModalOpen && <Modal isOpen={isModalOpen} onClose={closeModal} url={selectedUrl} />}
+      {isModalOpen && (
+        <Modal
+          isOpen={isModalOpen}
+          onClose={closeModal}
+          title={selectedUrl.data.length ? selectedUrl.data[selectedUrl.data.length - 1].title : 'N/A'}
+        />
+      )}
     </>
   );
 };
