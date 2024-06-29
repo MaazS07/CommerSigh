@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { ExternalLinkIcon, TrashIcon, DownloadIcon } from '@heroicons/react/outline';
 import { toast, Toaster } from 'react-hot-toast';
-import Modal from './Modal';
+import AmazonModal from './AmazonModal';
 import { saveAs } from 'file-saver';
 import ExcelJS from 'exceljs';
 import AddURL from './AmazonAddUrl';
@@ -121,7 +121,7 @@ const AmazonURLList = () => {
                         <div className="cursor-pointer mb-4" onClick={() => openModal(url)}>
                           <h3 className="text-xl font-semibold mb-2">{latestData.title || 'N/A'}</h3>
                           <p className="text-2xl font-bold text-green-600 mb-2">
-                            {latestData.price ? `${latestData.price}` : 'Not listed currently'}
+                            {latestData.price ? `₹${latestData.price}` : 'Not listed currently'}
                           </p>
                           <p className="text-sm text-gray-600 mb-1">
                             Last updated: {url.createdAt ? new Date(url.createdAt).toLocaleString() : 'N/A'}
@@ -161,7 +161,7 @@ const AmazonURLList = () => {
         </div>
       </div>
       {isModalOpen && (
-        <Modal
+        <AmazonModal
           isOpen={isModalOpen}
           onClose={closeModal}
           title={selectedUrl.data.length ? selectedUrl.data[selectedUrl.data.length - 1].title : 'N/A'}

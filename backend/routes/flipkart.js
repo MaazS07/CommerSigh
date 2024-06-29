@@ -105,8 +105,10 @@ router.post('/ranking', async (req, res) => {
     const { title, keyword } = req.body;
 
     try {
+        // Construct the search URL with the encoded keyword
         const searchUrl = `https://www.flipkart.com/search?q=${encodeURIComponent(keyword)}&otracker=search&otracker1=search&marketplace=FLIPKART&as-show=on&as=off`;
 
+        // Make GET request to Flipkart search URL
         const response = await axios.get(searchUrl, {
             headers: {
                 "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
@@ -117,36 +119,46 @@ router.post('/ranking', async (req, res) => {
             }
         });
 
+        // Check if the response status is 200 (OK)
         if (response.status === 200) {
             const $ = cheerio.load(response.data);
+
+            // Find all items in the search results
             const items = $('div.tUxRFH');
-            console.log(items)
 
             let rank = -1;
 
+            // Iterate over each item in the search results
             items.each((index, element) => {
                 const itemTitle = $(element).find('div.KzDlHZ').text().trim();
-                console.log(itemTitle)
+
+                // Check if the item title includes the desired product title
                 if (itemTitle.includes(title)) {
-                    rank = index + 1;
+                    rank = index + 1; // Set the rank (1-based index)
                     return false; // Exit the each loop
                 }
             });
 
+            // If rank is found, respond with 200 and rank information
             if (rank !== -1) {
                 res.status(200).json({ rank });
             } else {
+                // If product not found, respond with 404
                 res.status(404).json({ message: 'Product not found in search results' });
             }
         } else {
+            // Handle cases where Flipkart does not respond with status 200
             console.error(`Failed to fetch search results from Flipkart`);
             res.status(500).json({ message: 'Failed to fetch search results from Flipkart' });
         }
     } catch (error) {
+        // Handle any errors that occur during the request or parsing
         console.error('Error fetching Flipkart search results:', error.message);
         res.status(500).json({ message: 'Error fetching Flipkart search results' });
     }
 });
+
+module.exports = router;
 
 
 

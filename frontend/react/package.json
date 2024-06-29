@@ -12,6 +12,7 @@
   "dependencies": {
     "@heroicons/react": "^1.0.6",
     "axios": "^1.7.2",
+    "cheerio": "^1.0.0-rc.12",
     "exceljs": "^4.4.0",
     "file-saver": "^2.0.5",
     "moment": "^2.30.1",
