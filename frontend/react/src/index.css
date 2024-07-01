@@ -1,3 +1,8 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+input:focus + label,
+input:not(:placeholder-shown) + label {
+  transform: translateY(-1.5rem) scale(0.75);
+  color: #6366F1; /* Indigo color */
+}

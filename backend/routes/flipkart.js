@@ -101,6 +101,65 @@ router.delete('/:id', async (req, res) => {
 });
 
 // POST to get ranking
+// router.post('/ranking', async (req, res) => {
+//     const { title, keyword } = req.body;
+
+//     try {
+//         // Construct the search URL with the encoded keyword
+//         const searchUrl = `https://www.flipkart.com/search?q=${encodeURIComponent(keyword)}&otracker=search&otracker1=search&marketplace=FLIPKART&as-show=on&as=off`;
+
+//         // Make GET request to Flipkart search URL
+//         const response = await axios.get(searchUrl, {
+//             headers: {
+//                 "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
+//                 "Accept-Language": "en-US,en;q=0.5",
+//                 "Referer": "https://www.flipkart.com/",
+//                 "DNT": "1",
+//                 "Connection": "keep-alive"
+//             }
+//         });
+
+//         // Check if the response status is 200 (OK)
+//         if (response.status === 200) {
+//             const $ = cheerio.load(response.data);
+
+//             // Find all items in the search results
+//             const items = $('div.tUxRFH');
+
+//             let rank = -1;
+
+//             // Iterate over each item in the search results
+//             items.each((index, element) => {
+//                 const itemTitle = $(element).find('div.KzDlHZ').text().trim();
+
+//                 // Check if the item title includes the desired product title
+//                 if (itemTitle.includes(title)) {
+//                     rank = index + 1; // Set the rank (1-based index)
+//                     return false; // Exit the each loop
+//                 }
+//             });
+
+//             // If rank is found, respond with 200 and rank information
+//             if (rank !== -1) {
+//                 res.status(200).json({ rank });
+//             } else {
+//                 // If product not found, respond with 404
+//                 res.status(404).json({ message: 'Product not found in search results' });
+//             }
+//         } else {
+//             // Handle cases where Flipkart does not respond with status 200
+//             console.error(`Failed to fetch search results from Flipkart`);
+//             res.status(500).json({ message: 'Failed to fetch search results from Flipkart' });
+//         }
+//     } catch (error) {
+//         // Handle any errors that occur during the request or parsing
+//         console.error('Error fetching Flipkart search results:', error.message);
+//         res.status(500).json({ message: 'Error fetching Flipkart search results' });
+//     }
+// });
+
+
+
 router.post('/ranking', async (req, res) => {
     const { title, keyword } = req.body;
 
@@ -123,21 +182,62 @@ router.post('/ranking', async (req, res) => {
         if (response.status === 200) {
             const $ = cheerio.load(response.data);
 
-            // Find all items in the search results
-            const items = $('div.tUxRFH');
+            let items;
+            let itemTitleSelector;
+            let additionalTitleSelector;
+
+            // Check each potential selector until items are found
+            const potentialSelectors = [
+                { selector: 'div.slAVV4', titleSelector: 'a.wjcEIp', additionalTitleSelector: 'div.NqpwHC' }, // For first type with additional text
+                { selector: 'div.tUxRFH', titleSelector: 'div.KzDlHZ' } // For second type without additional text
+                // Add more potential selectors based on observed variations
+            ];
+
+            for (const { selector, titleSelector, additionalTitleSelector: additionalSelector } of potentialSelectors) {
+                items = $(selector);
+
+                if (items.length > 0) {
+                    itemTitleSelector = titleSelector;
+                    if (additionalSelector) {
+                        additionalTitleSelector = additionalSelector;
+                    }
+                    break;
+                }
+            }
+
+            if (!itemTitleSelector) {
+                console.error('No suitable selector found for scraping Flipkart');
+                return res.status(500).json({ message: 'Failed to fetch search results from Flipkart' });
+            }
 
             let rank = -1;
-
+            let itemTitle="";
             // Iterate over each item in the search results
             items.each((index, element) => {
-                const itemTitle = $(element).find('div.KzDlHZ').text().trim();
-
-                // Check if the item title includes the desired product title
-                if (itemTitle.includes(title)) {
+                let itemTitle;
+                const itemTitleFromFlipkart = $(element).find(itemTitleSelector).attr('title');
+            
+                if (itemTitleFromFlipkart) {
+                    const additionalText = $(element).find(additionalTitleSelector).text().trim();
+                    itemTitle = `${itemTitleFromFlipkart} (${additionalText})`;
+                } else {
+                    itemTitle = $(element).find(itemTitleSelector).text().trim();
+                }
+            
+                const itemTitlePassed = title; // Assuming 'title' is the title you're passing
+            
+                console.log("Title from Flipkart:", itemTitle);
+                console.log("Title passed:", itemTitlePassed);
+            
+                // Check if the item title includes the desired product title, ignoring the additional text
+                const passedTitleWithoutAdditional = itemTitlePassed.split('(')[0].trim(); // Extract the title part before '('
+            
+                if (itemTitle.includes(passedTitleWithoutAdditional)) {
                     rank = index + 1; // Set the rank (1-based index)
                     return false; // Exit the each loop
                 }
             });
+            
 
             // If rank is found, respond with 200 and rank information
             if (rank !== -1) {
@@ -156,9 +256,9 @@ router.post('/ranking', async (req, res) => {
         console.error('Error fetching Flipkart search results:', error.message);
         res.status(500).json({ message: 'Error fetching Flipkart search results' });
     }
+   
 });
 
-module.exports = router;
 
 
 
