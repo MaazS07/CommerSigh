@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { FiSearch, FiX } from 'react-icons/fi';
 
-const AmazonModal = ({ isOpen, onClose, title }) => {
+const FlipkartModal = ({ isOpen, onClose, title }) => {
   const [inputValue, setInputValue] = useState('');
   const [rank, setRank] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -13,7 +13,7 @@ const AmazonModal = ({ isOpen, onClose, title }) => {
       title: title,
       keyword: inputValue
     };
-    axios.post('http://localhost:3000/api/urls/ranking', data)
+    axios.post('http://localhost:3000/api/flipkart/ranking', data)
       .then(response => {
         const receivedRank = response.data.rank;
         setRank(receivedRank);
@@ -32,38 +32,37 @@ const AmazonModal = ({ isOpen, onClose, title }) => {
   return (
     <div className="fixed z-10 inset-0 overflow-y-auto bg-black bg-opacity-50 backdrop-blur-sm">
       <div className="flex items-center justify-center p-5 min-h-screen">
-        <div className="bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 w-full max-w-2xl mx-auto rounded-2xl shadow-2xl overflow-hidden border border-yellow-500">
+        <div className="bg-white w-full max-w-2xl mx-auto rounded-2xl shadow-2xl overflow-hidden border border-gray-200">
           <div className="relative px-8 py-10">
-            <button
+          <button
               onClick={onClose}
               className="absolute top-4 right-4 text-yellow-500 hover:text-yellow-400 transition duration-300  hover:bg-red-600 hover:text-white hover:rounded-3xl "
             >
               <FiX className="w-8 h-8 " />
             </button>
-            <h3 className="text-3xl font-bold text-yellow-500 mb-8 text-center " style={{ fontFamily:"Anton SC" ,fontWeight:"900"}}>Amazon Search Engine Rank</h3>
+            <h3 className="text-3xl font-bold text-blue-800 mb-8 text-center" style={{ fontFamily: "Anton SC", fontWeight: "900" }}>Flipkart Search Engine Rank</h3>
             <div className="mb-8">
               <div className="relative">
-                <h3 className='text-white mb-10 opacity-30' style={{ fontFamily: 'Roboto', fontWeight: 'normal' }}>Add a keyword here to get your product rank based on it </h3>
-                <h2 className='text-xl font-bold text-white mb-8 text-center' style={{fontFamily:"Wittgenstein", fontWeight:"700"}}>{title}</h2>
+                <h3 className='text-gray-600 mb-10 opacity-70' style={{ fontFamily: 'Roboto', fontWeight: 'normal' }}>Add a keyword here to get your product rank based on it</h3>
+                <h2 className='text-xl font-bold text-blue-800 mb-8 text-center' style={{ fontFamily: "Wittgenstein", fontWeight: "700" }}>{title}</h2>
                 <input
                   type="text"
-                  className="w-full py-4 px-6 bg-gray-700 text-white placeholder-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 transition duration-300"
+                  className="w-full py-4 px-6 bg-white text-blue-800 placeholder-blue-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-100 transition duration-300"
                   placeholder="Enter keyword here"
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
                   style={{ fontFamily: 'Roboto', fontWeight: 'normal' }}
                 />
-                {/* <FiSearch className="absolute right-4 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" /> */}
               </div>
             </div>
-            
+
             {loading ? (
               <div className="flex justify-center items-center py-8">
-                <div className="w-24 h-24 border-4 border-yellow-500 border-t-transparent rounded-full animate-spin"></div>
+                <div className="w-24 h-24 border-4 border-blue-800 border-t-transparent rounded-full animate-spin"></div>
               </div>
             ) : rank !== null && (
-              <div className="bg-gray-700 rounded-lg p-6 mb-8">
-                <h2 className="text-3xl font-bold text-yellow-500 text-center" style={{fontFamily:"Wittgenstein", fontWeight:"700"}}>
+              <div className="bg-yellow-50 rounded-lg p-6 mb-8">
+                <h2 className="text-3xl font-bold text-blue-800 text-center" style={{ fontFamily: "Wittgenstein", fontWeight: "700" }}>
                   {rank === 'We are unable to track it' ? rank : `Rank: ${rank}`}
                 </h2>
               </div>
@@ -71,7 +70,7 @@ const AmazonModal = ({ isOpen, onClose, title }) => {
             <div className="flex justify-center">
               <button
                 onClick={handleSubmit}
-                className="px-8 py-4 bg-yellow-500 text-gray-900 rounded-lg hover:bg-yellow-400 transition duration-300 transform hover:scale-105 flex items-center"
+                className="px-8 py-4 bg-yellow-500 text-blue-800 rounded-lg hover:bg-yellow-300 transition duration-300 transform hover:scale-105 flex items-center"
                 style={{ fontFamily: 'Roboto', fontWeight: 'bold' }}
               >
                 <FiSearch className="mr-2" />
@@ -85,4 +84,4 @@ const AmazonModal = ({ isOpen, onClose, title }) => {
   );
 };
 
-export default AmazonModal;
+export default FlipkartModal;

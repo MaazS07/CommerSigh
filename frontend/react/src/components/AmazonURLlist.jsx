@@ -1,17 +1,22 @@
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
-import { ExternalLinkIcon, TrashIcon, DownloadIcon } from '@heroicons/react/outline';
-import { toast, Toaster } from 'react-hot-toast';
-import AmazonModal from './AmazonModal';
-import { saveAs } from 'file-saver';
-import ExcelJS from 'exceljs';
-import AddURL from './AmazonAddUrl';
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import {
+  ExternalLinkIcon,
+  TrashIcon,
+  DocumentDownloadIcon,
+  StarIcon,
+} from "@heroicons/react/outline";
+import { toast, Toaster } from "react-hot-toast";
+import AmazonModal from "./AmazonModal";
+import { saveAs } from "file-saver";
+import ExcelJS from "exceljs";
+import AddURL from "./AmazonAddUrl";
 
 const AmazonURLList = () => {
   const [urls, setUrls] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [isModalOpen, setIsModalOpen] = useState(false); // State for controlling modal visibility
-  const [selectedUrl, setSelectedUrl] = useState(null); // State to track the selected URL
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedUrl, setSelectedUrl] = useState(null);
 
   useEffect(() => {
     fetchUrls();
@@ -19,13 +24,13 @@ const AmazonURLList = () => {
 
   const fetchUrls = async () => {
     try {
-      const response = await axios.get('http://localhost:3000/api/urls');
+      const response = await axios.get("http://localhost:3000/api/urls");
       setUrls(response.data);
       setLoading(false);
     } catch (error) {
-      console.error('Error fetching URLs:', error);
+      console.error("Error fetching URLs:", error);
       setLoading(false);
-      toast.error('Failed to fetch URLs. Please try again.');
+      toast.error("Failed to fetch URLs. Please try again.");
     }
   };
 
@@ -33,12 +38,13 @@ const AmazonURLList = () => {
     try {
       await axios.delete(`http://localhost:3000/api/urls/${id}`);
       setUrls(urls.filter((url) => url._id !== id));
-      toast.success('URL deleted successfully');
+      toast.success("URL deleted successfully");
     } catch (error) {
-      console.error('Error deleting URL:', error);
-      toast.error('Failed to delete URL. Please try again.');
+      console.error("Error deleting URL:", error);
+      toast.error("Failed to delete URL. Please try again.");
     }
   };
+
   const openModal = (url) => {
     setSelectedUrl(url);
     setIsModalOpen(true);
@@ -51,103 +57,153 @@ const AmazonURLList = () => {
 
   const exportToExcel = () => {
     const workbook = new ExcelJS.Workbook();
-    const worksheet = workbook.addWorksheet('Flipkart Data');
-    
+    const worksheet = workbook.addWorksheet("Amazon Data");
+
     // Define columns headers
     worksheet.columns = [
-      { header: 'Title', key: 'title', width: 40 },
-      { header: 'Price', key: 'price', width: 15 },
-      { header: 'Last Updated', key: 'updatedAt', width: 20 },
-      { header: 'Rating', key: 'rating', width: 15 },
-      { header: 'Availability', key: 'availability', width: 20 },
-      { header: 'URL', key: 'url', width: 40 },
+      { header: "Title", key: "title", width: 40 },
+      { header: "Price (INR)", key: "price", width: 15 },
+      { header: "Last Updated", key: "updatedAt", width: 20 },
+      { header: "Rating", key: "rating", width: 15 },
+      { header: "Availability", key: "availability", width: 20 },
+      { header: "URL", key: "url", width: 40 },
     ];
 
     // Add data rows
-    urls.forEach(url => {
+    urls.forEach((url) => {
       const latestData = url.data.length ? url.data[url.data.length - 1] : {};
       worksheet.addRow({
-        title: latestData.title || 'N/A',
-        price: latestData.price ? `${latestData.price}` : 'Not listed currently',
-        updatedAt: url.createdAt ? new Date(url.createdAt).toLocaleString() : 'N/A',
-        rating: latestData.rating ? `${latestData.rating.slice(0, 3)}★` : 'No ratings yet',
-        availability: latestData.availability || 'Out of Stock',
+        title: latestData.title || "N/A",
+        price: latestData.price
+          ? parseFloat(latestData.price.slice(0, -1).replace(/,/g, ""))
+          : null,
+        updatedAt: url.createdAt
+          ? new Date(url.createdAt).toLocaleString()
+          : "N/A",
+        rating: latestData.rating
+          ? `${latestData.rating.slice(0, 3)}`
+          : "No ratings yet",
+        availability: latestData.availability || "Out of Stock",
         url: url.url,
       });
     });
 
     // Generate Excel file
     const today = new Date();
-    const fileName = `Amazon_${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}.xlsx`;
+    const fileName = `Amazon_${today.getFullYear()}-${
+      today.getMonth() + 1
+    }-${today.getDate()}.xlsx`;
     workbook.xlsx.writeBuffer().then((buffer) => {
-      const blob = new Blob([buffer], { type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' });
+      const blob = new Blob([buffer], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+      });
       saveAs(blob, fileName);
     });
 
-    toast.success('Data exported to Excel successfully!');
+    toast.success("Data exported to Excel successfully!");
   };
+
   return (
     <>
-      <div className="bg-gray-100 min-h-screen py-8">
+      <div className="bg-gradient-to-r from-gray-900 to-gray-800 min-h-screen py-8 font-sans">
         <Toaster position="top-right" />
-        <div className="max-w-4xl mx-auto">
-          <h1 className="text-3xl font-bold text-center mb-8">Amazon Price Tracker</h1>
-          <div className="bg-white rounded-lg shadow-md overflow-hidden">
-            <div className="p-6">
-              <h2 className="text-2xl font-semibold mb-4">Add New URL</h2>
+        <div className="max-w-6xl mx-auto px-4">
+          <h1 className="text-4xl font-bold text-center mb-12 text-yellow-500">
+            Amazon
+          </h1>
+          <div className="bg-gray-800 rounded-2xl shadow-2xl overflow-hidden">
+            <div className="p-8">
               <AddURL fetchUrls={fetchUrls} />
             </div>
-            <div className="border-t border-gray-200">
+            <div className="border-t border-gray-700">
               <div className="flex justify-end mb-4">
                 <button
                   onClick={exportToExcel}
-                  className="m-10 mb-0 flex items-center bg-green-900 text-white px-4 py-2 rounded-md hover:bg-green-600 focus:outline-none transition duration-150 ease-in-out"
+                  className="m-10 mb-0 flex items-center bg-yellow-500 text-gray-900 px-6 py-3 rounded-full hover:bg-yellow-400 focus:outline-none transition duration-300 ease-in-out transform hover:scale-105 shadow-lg"
                 >
-                  <DownloadIcon className="h-5 w-5 text-white bolder mr-2" />
-                  Excel
+                  <DocumentDownloadIcon className="h-6 w-6 mr-2" />
+                  Export to Excel
                 </button>
               </div>
-              <h2 className="text-2xl font-semibold p-6 pb-3">Tracked URLs</h2>
+              <h2
+                className="text-3xl font-semibold p-8 pb-6 text-white"
+                style={{ fontFamily: "Inconsolata", fontWeight: "700" }}
+              >
+                Added Products
+              </h2>
               {loading ? (
                 <div className="flex items-center justify-center h-64">
                   <div className="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12"></div>
                 </div>
               ) : (
-                <ul className="divide-y divide-gray-200">
+                <ul className="divide-y divide-gray-700">
                   {urls.map((url) => {
-                    const latestData = url.data.length ? url.data[url.data.length - 1] : {};
+                    const latestData = url.data.length
+                      ? url.data[url.data.length - 1]
+                      : {};
                     return (
-                      <li key={url._id} className="p-6 hover:bg-gray-50 transition duration-150 ease-in-out">
-                        <div className="cursor-pointer mb-4" onClick={() => openModal(url)}>
-                          <h3 className="text-xl font-semibold mb-2">{latestData.title || 'N/A'}</h3>
-                          <p className="text-2xl font-bold text-green-600 mb-2">
-                            {latestData.price ? `₹${latestData.price}` : 'Not listed currently'}
+                      <li
+                        key={url._id}
+                        className="p-8 hover:bg-gray-700 transition duration-300 ease-in-out"
+                      >
+                        <div
+                          className="cursor-pointer mb-4"
+                          onClick={() => openModal(url)}
+                        >
+                          <h3
+                            className="text-2xl font-semibold mb-3 text-white "
+                            style={{
+                              fontFamily: "Inconsolata",
+                              fontWeight: "700",
+                            }}
+                          >
+                            {latestData.title || "N/A"}
+                          </h3>
+                          <p
+                            className="text-3xl font-bold text-yellow-500 mb-3 "
+                            style={{
+                              fontFamily: "Inconsolata",
+                              fontWeight: "700",
+                            }}
+                          >
+                            {latestData.price
+                              ? `₹${latestData.price}`
+                              : "Not listed currently"}
                           </p>
-                          <p className="text-sm text-gray-600 mb-1">
-                            Last updated: {url.createdAt ? new Date(url.createdAt).toLocaleString() : 'N/A'}
+
+                          <p className=" text-gray-400 mb-2 italic text-xl">
+                            Last updated:{" "}
+                            {url.createdAt
+                              ? new Date(url.createdAt).toLocaleString()
+                              : "N/A"}
                           </p>
-                          <p className="text-sm text-gray-600 mb-1">
-                            {latestData.rating ? `Rating: ${latestData.rating.slice(0, 3)}★` : 'No ratings yet'}
+                          <p className="text-xl text-gray-400 mb-2 italic font-md flex items-center">
+                            {latestData.rating
+                              ? `Rating: ${latestData.rating.slice(0, 3)}`
+                              : "No ratings yet"}
+                            <StarIcon className="h-4 w-4 ml-1 text-yellow-500" />
                           </p>
-                          <p className="text-sm text-gray-600">
-                            {latestData.availability ? `Availability: ${latestData.availability}` : 'Out of Stock'}
+                          <p className="text-xl text-gray-400 italic font-xl">
+                            {latestData.availability
+                              ? `Availability: ${latestData.availability}`
+                              : "Out of Stock"}
                           </p>
                         </div>
-                        <div className="flex items-center justify-between mt-4">
+                        <div className="flex items-center justify-between mt-6">
                           <button
                             onClick={() => handleDelete(url._id)}
-                            className="flex items-center text-red-500 hover:text-red-600 focus:outline-none transition duration-150 ease-in-out"
+                            className="flex items-center text-red-400 hover:text-red-300 focus:outline-none transition duration-300 ease-in-out"
                           >
-                            <TrashIcon className="h-5 w-5 mr-1" />
+                            <TrashIcon className="h-5 w-5 mr-2" />
                             Delete
                           </button>
                           <a
                             href={url.url}
                             target="_blank"
                             rel="noopener noreferrer"
-                            className="flex items-center text-blue-500 hover:text-blue-600 focus:outline-none transition duration-150 ease-in-out"
+                            className="flex items-center text-blue-400 hover:text-blue-300 focus:outline-none transition duration-300 ease-in-out"
                           >
-                            <ExternalLinkIcon className="h-5 w-5 mr-1" />
+                            <ExternalLinkIcon className="h-5 w-5 mr-2 italic" />
                             Visit Amazon
                           </a>
                         </div>
@@ -164,10 +220,15 @@ const AmazonURLList = () => {
         <AmazonModal
           isOpen={isModalOpen}
           onClose={closeModal}
-          title={selectedUrl.data.length ? selectedUrl.data[selectedUrl.data.length - 1].title : 'N/A'}
+          title={
+            selectedUrl.data.length
+              ? selectedUrl.data[selectedUrl.data.length - 1].title
+              : "N/A"
+          }
         />
       )}
     </>
   );
 };
+
 export default AmazonURLList;

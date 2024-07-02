@@ -1,23 +1,18 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { toast, Toaster } from 'react-hot-toast';
-import { FiCheckCircle, FiAlertCircle, FiXCircle } from 'react-icons/fi';
+import { FiCheckCircle, FiXCircle, FiSearch } from 'react-icons/fi';
 
 const FlipkartAddURL = ({ fetchUrls }) => {
   const [url, setUrl] = useState('');
-
-  // Regular expression for validating Flipkart URLs
   const urlRegex = /^(https?:\/\/)?(www\.)?(flipkart\.com)\/.*$/;
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Validate URL format
     if (!urlRegex.test(url)) {
       showErrorToast('Please enter a valid Flipkart URL');
       return;
     }
-
     try {
       const response = await axios.post('http://localhost:3000/api/flipkart', { url });
       console.log(response.data);
@@ -57,7 +52,7 @@ const FlipkartAddURL = ({ fetchUrls }) => {
   };
 
   return (
-    <div className="bg-white p-4 rounded-lg shadow-md mb-4">
+    <div className="bg-gradient-to-r from-blue-600 to-blue-400 p-6 rounded-lg shadow-2xl mb-4">
       <Toaster 
         position="top-right"
         toastOptions={{
@@ -68,21 +63,26 @@ const FlipkartAddURL = ({ fetchUrls }) => {
           },
         }}
       />
-      <h2 className="text-xl font-bold mb-2">Add Flipkart URL</h2>
+      <h2 className="text-2xl font-bold mb-4 text-white">Add Flipkart URL</h2>
       <form onSubmit={handleSubmit} className="flex items-center">
-        <input
-          type="text"
-          value={url}
-          onChange={(e) => setUrl(e.target.value)}
-          placeholder="Enter Flipkart URL (e.g., https://www.flipkart.com/product/...)"
-          className="flex-1 py-2 px-4 mr-2 rounded-md border-gray-300 focus:outline-none focus:border-blue-500"
-          required
-        />
+        <div className="relative flex-1 mr-2">
+          <input
+            type="text"
+            value={url}
+            onChange={(e) => setUrl(e.target.value)}
+            placeholder="Enter Flipkart URL (e.g., https://www.flipkart.com/product/...)"
+            className="w-full py-3 px-4 bg-white bg-opacity-20 text-white placeholder-gray-200 border-b-2 border-white focus:outline-none focus:border-yellow-400 rounded-lg transition-colors duration-300"
+            required
+          />
+          <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+            <FiSearch className="text-white" />
+          </div>
+        </div>
         <button
           type="submit"
-          className="py-2 px-4 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none"
+          className="py-3 px-6 bg-yellow-400 text-blue-900 rounded-full hover:bg-yellow-300 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-opacity-50 transition-all duration-300 transform hover:scale-105"
         >
-          Add URL
+          <FiSearch className="text-xl" />
         </button>
       </form>
     </div>
