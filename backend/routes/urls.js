@@ -90,6 +90,9 @@ router.delete('/:id', async (req, res) => {
     }
 });
 
+
+
+
 router.post('/ranking', async (req, res) => {
     const { title, keyword } = req.body;
 
@@ -122,8 +125,8 @@ router.post('/ranking', async (req, res) => {
 
                 // Define potential selectors based on observed variations in Amazon's HTML structure
                 const potentialSelectors = [
-                    '.s-result-item',                  // Default selector for search result items
-                    '.sg-col-inner .sg-col-4-of-12'    // Example of an alternative selector, adjust as needed
+                    'div.s-card-container',    // Example of an alternative selector, adjust as needed
+                    'div.s-result-item'        // Common selector for search result items
                 ];
 
                 for (const selector of potentialSelectors) {
@@ -144,7 +147,7 @@ router.post('/ranking', async (req, res) => {
                 items.each((index, element) => {
                     const itemTitleElement = $(element).find(itemTitleSelector);
                     const itemTitle = itemTitleElement.text().trim();
-                    console.log(`Found item title: ${itemTitle}`);
+                    console.log(`Page ${page} - Item ${index + 1}: ${itemTitle}`);
 
                     // Check if the item title includes the desired product title
                     if (itemTitle.includes(title)) {
@@ -154,8 +157,8 @@ router.post('/ranking', async (req, res) => {
                     }
                 });
 
-                // Check if there are more pages
-                const nextPageExists = $('li.a-last').children().first().text().includes('Next');
+                // Check if there are more pages using the provided selector
+                const nextPageExists = $('div.s-pagination-container').find('.s-pagination-next').length > 0;
                 if (!nextPageExists) {
                     break; // Exit the loop if no more pages
                 }
@@ -181,6 +184,10 @@ router.post('/ranking', async (req, res) => {
         res.status(500).json({ message: 'Error fetching Amazon search results' });
     }
 });
+
+
+
+
 
 
 
