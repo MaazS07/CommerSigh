@@ -6,20 +6,14 @@ import { motion } from 'framer-motion';
 
 const HeroPage = () => {
   return (
-    <div className="min-h-screen bg-white relative overflow-hidden">
-      {/* Background SVG */}
-      <svg className="absolute inset-0 w-full h-full" style={{ zIndex: -1 }}>
-        <defs>
-          <linearGradient id="gradient1" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%" style={{ stopColor: '#a18cd1', stopOpacity: 1 }} />
-            <stop offset="100%" style={{ stopColor: '#fbc2eb', stopOpacity: 1 }} />
-          </linearGradient>
-        </defs>
-        <circle cx="30%" cy="30%" r="400" fill="url(#gradient1)" />
-      </svg>
+    <div className="min-h-screen bg-gray-900 relative overflow-hidden">
+      {/* Background Animation */}
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTYiIGhlaWdodD0iMTAwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxkZWZzPjxwYXR0ZXJuIGlkPSJncmlkIiB3aWR0aD0iNTYiIGhlaWdodD0iMTAwIiBwYXR0ZXJuVW5pdHM9InVzZXJTcGFjZU9uVXNlIj48cGF0aCBkPSJNIDU2IDAgTCAwIDAgMCAxMDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZDcwMCIgc3Ryb2tlLXdpZHRoPSIwLjUiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-5"></div>
+      </div>
 
       {/* Hero Section */}
-      <div className="container mx-auto px-4 py-16">
+      <div className="container mx-auto px-4 py-16 relative z-10">
         <div className="flex flex-col lg:flex-row items-center justify-between">
           {/* Login/Signup Component */}
           <motion.div 
@@ -31,26 +25,46 @@ const HeroPage = () => {
             <LoginSignup />
           </motion.div>
           
-          {/* Image */}
+          {/* Image and Tagline */}
           <motion.div 
-            className="w-full lg:w-1/2 flex justify-center"
+            className="w-full lg:w-1/2 flex flex-col items-center"
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.8 }}
           >
-            <img 
-              src={heroimage} 
-              alt="E-Scrape Hero" 
-              className="w-full max-w-md h-[50vh] rounded-lg object-cover filter drop-shadow-xl"
-            />
+            <div className="relative w-full max-w-md h-[50vh] mb-8 overflow-hidden rounded-lg">
+              <img 
+                src={heroimage} 
+                alt="E-Scrape Hero" 
+                className="w-full h-full object-cover filter brightness-75 contrast-125 mix-blend-luminosity"
+              />
+              <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/30 to-yellow-600/30 mix-blend-overlay"></div>
+            </div>
+            <motion.h3 
+              className="text-3xl font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-yellow-200 mb-4"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.5 }}
+            >
+              Revolutionize Your E-Commerce Experience
+            </motion.h3>
+            <motion.p
+              className="text-lg text-center text-gray-300"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.7 }}
+            >
+              Scrape, analyze, and optimize your online shopping journey
+            </motion.p>
           </motion.div>
         </div>
       </div>
 
       {/* Timeline Guide */}
-      <div className="bg-white py-16">
+      <hr className='' />
+      <div className="bg-gray-900 py-16">
         <div className="container mx-auto px-4">
-          <h2 className="text-4xl font-bold text-center mb-12 text-gray-800">How It Works</h2>
+          <h2 className="text-4xl font-bold text-center mb-12 text-yellow-400">How It Works</h2>
           <TimelineGuide />
         </div>
       </div>

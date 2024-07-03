@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from 'react';
 import { motion, useAnimation } from 'framer-motion';
 import timeline from "../assets/timeline.png"
+
 const TimelineGuide = () => {
   const controls = useAnimation();
   const ref = useRef(null);
@@ -50,9 +51,9 @@ const TimelineGuide = () => {
   }, [controls]);
 
   return (
-    <div className="flex" ref={ref}>
-      <div className="w-2/3 relative pr-8">
-        <div className="absolute left-8 top-0 bottom-0 w-1 bg-orange-200"></div>
+    <div className="flex flex-col lg:flex-row" ref={ref}>
+      <div className="w-full lg:w-2/3 relative pr-8">
+        <div className="absolute left-8 top-0 bottom-0 w-1 bg-yellow-400/30"></div>
         {steps.map((step, index) => (
           <motion.div
             key={index}
@@ -60,26 +61,29 @@ const TimelineGuide = () => {
             initial="hidden"
             animate={controls}
             variants={{
-              visible: { opacity: 1, y: 0 },
-              hidden: { opacity: 0, y: 50 }
+              visible: { opacity: 1, x: 0 },
+              hidden: { opacity: 0, x: -50 }
             }}
             transition={{ duration: 0.5, delay: index * 0.2 }}
           >
-            <div className="flex-shrink-0 w-16 h-16 rounded-full bg-orange-500 border-4 border-white shadow-lg z-10 flex items-center justify-center text-xl font-bold text-white">
+            <div className="flex-shrink-0 w-16 h-16 rounded-full bg-yellow-400 border-4 border-gray-800 shadow-lg z-10 flex items-center justify-center text-xl font-bold text-gray-900">
               {index + 1}
             </div>
             <div className="ml-8 flex-grow">
-              <h3 className="text-2xl font-semibold text-orange-600 mb-2">{step.title}</h3>
-              <p className="text-gray-600">{step.description}</p>
+              <h3 className="text-2xl font-semibold text-yellow-400 mb-2">{step.title}</h3>
+              <p className="text-gray-300">{step.description}</p>
             </div>
           </motion.div>
         ))}
       </div>
-      <div className="w-1/3 sticky top-20 h-screen flex justify-center">
-      <img 
+      <div className="w-full lg:w-1/3 lg:sticky lg:top-20 h-[60vh] flex justify-center items-center mt-8 lg:mt-0">
+        <motion.img 
           src={timeline} 
           alt="Timeline illustration" 
-          className="w-[50vw] h-[60vh] object-cover drop-shadow-xl"
+          className="w-full max-w-md h-auto object-cover rounded-lg shadow-2xl"
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.8, delay: 0.5 }}
         />
       </div>
     </div>
