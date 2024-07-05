@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { toast, Toaster } from 'react-hot-toast';
-import { FiCheckCircle, FiXCircle, FiSearch } from 'react-icons/fi';
+import { FiCheckCircle, FiSearch, FiXCircle,  } from 'react-icons/fi';
+import { MdAddToPhotos } from "react-icons/md"
 
 const FlipkartAddURL = ({ fetchUrls }) => {
   const [url, setUrl] = useState('');
@@ -74,15 +75,15 @@ const FlipkartAddURL = ({ fetchUrls }) => {
             className="w-full py-3 px-4 bg-white bg-opacity-20 text-white placeholder-gray-200 border-b-2 border-white focus:outline-none focus:border-yellow-400 rounded-lg transition-colors duration-300"
             required
           />
-          <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-            <FiSearch className="text-white" />
-          </div>
+          {/* <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+            <MdAddToPhotos className="text-white" />
+          </div> */}
         </div>
         <button
-          type="submit"
-          className="py-3 px-6 bg-yellow-400 text-blue-900 rounded-full hover:bg-yellow-300 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-opacity-50 transition-all duration-300 transform hover:scale-105"
+          type="submit" 
+          className="py-3 px-6 bg-yellow-400 text-blue-900 rounded hover:bg-yellow-300 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:ring-opacity-50 transition-all duration-300 transform hover:scale-105"
         >
-          <FiSearch className="text-xl" />
+          <MdAddToPhotos className="text-xl" />
         </button>
       </form>
     </div>

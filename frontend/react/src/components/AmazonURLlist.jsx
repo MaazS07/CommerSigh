@@ -133,7 +133,8 @@ const AmazonURLList = () => {
               </h2>
               {loading ? (
                 <div className="flex items-center justify-center h-64">
-                  <div className="loader ease-linear rounded-full border-4 border-t-4 border-gray-200 h-12 w-12"></div>
+                   <div className="w-24 h-24 border-4 border-yellow-500 border-t-transparent rounded-full animate-spin"></div>
+                   
                 </div>
               ) : (
                 <ul className="divide-y divide-gray-700">

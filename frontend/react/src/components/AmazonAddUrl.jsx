@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { toast, Toaster } from 'react-hot-toast';
 import { FiCheckCircle, FiXCircle, FiSearch } from 'react-icons/fi';
+import { MdAddToPhotos } from "react-icons/md"
+
 
 const AmazonAddURL = ({ fetchUrls }) => {
   const [url, setUrl] = useState('');
@@ -74,15 +76,15 @@ const AmazonAddURL = ({ fetchUrls }) => {
             className="w-full py-3 px-4 bg-transparent text-white border-b-2 border-gray-600 focus:outline-none focus:border-yellow-500 transition-colors duration-300"
             required
           />
-          <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-            <FiSearch className="text-gray-400" />
-          </div>
+          {/* <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
+            <MdAddToPhotos className="md:text-gray-400 sm:bg-none  sm:text-transparent" />
+          </div> */}
         </div>
         <button
           type="submit"
           className="py-3 px-6 bg-yellow-500 text-gray-900 rounded-full hover:bg-yellow-400 focus:outline-none focus:ring-2 focus:ring-yellow-600 focus:ring-opacity-50 transition-all duration-300 transform hover:scale-105"
         >
-          <FiSearch className="text-xl" />
+          <MdAddToPhotos className="text-xl" />
         </button>
       </form>
     </div>

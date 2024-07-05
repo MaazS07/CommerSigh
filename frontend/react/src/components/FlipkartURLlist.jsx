@@ -102,10 +102,11 @@ const FlipkartURLList = () => {
 
   return (
     <>
-      <div className="bg-gradient-to-r from-blue-900 to-blue-600 min-h-screen py-8 font-sans">
+      <div className="bg-gradient-to-r from-white to-yellow-50 min-h-screen py-8 font-sans">
         <Toaster position="top-right" />
         <div className="max-w-6xl mx-auto px-4">
-          <h1 className="text-4xl font-bold text-center mb-12 text-white">
+          <h1 className="text-4xl font-bold text-center mb-12 text-blue-900"
+          style={{ fontFamily: "Inconsolata", fontWeight: "700" }}>
             Flipkart
           </h1>
           <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
@@ -116,7 +117,7 @@ const FlipkartURLList = () => {
               <div className="flex justify-end mb-4">
                 <button
                   onClick={exportToExcel}
-                  className="m-10 mb-0 flex items-center bg-blue-800  px-6 py-3 rounded-full hover:bg-blue-400 focus:outline-none transition duration-300 ease-in-out transform hover:scale-105 shadow-lg text-white font-bolder"
+                  className="m-10 mb-0 flex items-center bg-yellow-500  px-6 py-3 rounded-full hover:bg-blue-400 focus:outline-none transition duration-300 ease-in-out transform hover:scale-105 shadow-lg text-white font-bolder"
                 >
                   <DocumentDownloadIcon className="h-6 w-6 mr-2" />
                   Export to Excel
@@ -130,9 +131,8 @@ const FlipkartURLList = () => {
               </h2>
               {loading ? (
                   <div className="flex items-center justify-center h-64">
-                  <div className="loader-container">
-                    <div className="loader ease-linear rounded-full border-4 border-t-4 border-blue-500 h-12 w-12 animate-pulse"></div>
-                  </div>
+                   <div className="w-24 h-24 border-4 border-blue-800 border-t-transparent rounded-full animate-spin"></div>
+                  
                 </div>
               ) : (
                 <ul className="divide-y divide-gray-200">
