@@ -371,5 +371,116 @@ router.post('/ranking', async (req, res) => {
     }
 });
 
+// router.post('/ranking', async (req, res) => {
+//     const { title, keyword } = req.body;
 
+//     try {
+//         let page = 1;
+//         let found = false;
+//         let rank = -1;
+//         let topProducts = [];
+
+//         while (!found ) {
+//             const searchUrl = `https://www.flipkart.com/search?q=${encodeURIComponent(keyword)}&otracker=search&otracker1=search&marketplace=FLIPKART&as-show=on&as=off&page=${page}`;
+
+//             try {
+//                 const response = await axios.get(searchUrl, {
+//                     headers: {
+//                         "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
+//                         "Accept-Language": "en-US,en;q=0.5",
+//                         "Referer": "https://www.flipkart.com/",
+//                         "DNT": "1",
+//                         "Connection": "keep-alive"
+//                     },
+                    
+//                 });
+
+//                 if (response.status === 200) {
+//                     const $ = cheerio.load(response.data);
+
+//                     let items;
+//                     let itemTitleSelector;
+//                     let additionalTitleSelector;
+//                     let ratingSelector;
+//                     let priceSelector;
+
+//                     const potentialSelectors = [
+//                         { selector: 'div.slAVV4', titleSelector: 'a.wjcEIp', additionalTitleSelector: 'div.NqpwHC', ratingSelector: 'div.XQDdHH', priceSelector: 'div.Nx9bqj' },
+//                         { selector: 'div.tUxRFH', titleSelector: 'div.KzDlHZ', ratingSelector: 'div.XQDdHH', priceSelector: 'div.Nx9bqj._4b5DiR' }
+//                     ];
+
+//                     for (const { selector, titleSelector, additionalTitleSelector: additionalSelector, ratingSelector: ratingSel, priceSelector: priceSel } of potentialSelectors) {
+//                         items = $(selector);
+
+//                         if (items.length > 0) {
+//                             itemTitleSelector = titleSelector;
+//                             ratingSelector = ratingSel;
+//                             priceSelector = priceSel;
+//                             if (additionalSelector) {
+//                                 additionalTitleSelector = additionalSelector;
+//                             }
+//                             break;
+//                         }
+//                     }
+
+//                     if (!itemTitleSelector) {
+//                         console.error('No suitable selector found for scraping Flipkart');
+//                         continue; // Skip to next page instead of returning error
+//                     }
+
+//                     items.each((index, element) => {
+//                         let itemTitle;
+//                         const itemTitleFromFlipkart = $(element).find(itemTitleSelector).attr('title');
+                    
+//                         if (itemTitleFromFlipkart) {
+//                             const additionalText = $(element).find(additionalTitleSelector).text().trim();
+//                             itemTitle = `${itemTitleFromFlipkart} (${additionalText})`;
+//                         } else {
+//                             itemTitle = $(element).find(itemTitleSelector).text().trim();
+//                         }
+                    
+//                         const itemRating = $(element).find(ratingSelector).text().trim();
+//                         const itemPrice = $(element).find(priceSelector).text().trim();
+                    
+//                         if (topProducts.length < 5) {
+//                             topProducts.push({
+//                                 title: itemTitle,
+//                                 rating: itemRating,
+//                                 price: itemPrice
+//                             });
+//                         }
+                    
+//                         if (!found && itemTitle.toLowerCase().includes(title.toLowerCase())) {
+//                             rank = (page - 1) * items.length + (index + 1);
+//                             found = true;
+//                         }
+//                     });
+
+//                     const nextPageExists = $('a._9QVEpD').last().text().includes('Next');
+//                     if (!nextPageExists) {
+//                         break; // Exit the loop if no more pages
+//                     }
+
+//                     page++;
+//                 } else {
+//                     console.error(`Failed to fetch search results from Flipkart`);
+//                     break; // Exit the loop on non-200 status
+//                 }
+//             } catch (error) {
+//                 console.error(`Error on page ${page}:`, error.message);
+//                 break; // Exit the loop on error
+//             }
+//         }
+
+//         // Always return the top products, even if the specific product is not found
+//         if (found) {
+//             res.status(200).json({ rank, topProducts });
+//         } else {
+//             res.status(404).json({ message: 'Product not found in search results', topProducts });
+//         }
+//     } catch (error) {
+//         console.error('Error fetching Flipkart search results:', error.message);
+//         res.status(500).json({ message: 'Error fetching Flipkart search results', topProducts });
+//     }
+// });
 module.exports = router;
