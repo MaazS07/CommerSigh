@@ -21,10 +21,11 @@ function App() {
         <Route path="/" element={<HeroPage />} />
         
         {/* Private routes */}
+        < Route path="/amazon" element={<AmazonURLList />} user={user} />
+        <Route path="/flipkart" element={<FlipkartURLList />} user={user} />
       
       </Routes>
-      <PrivateRoute path="/amazon" element={<AmazonURLList />} user={user} />
-      <PrivateRoute path="/flipkart" element={<FlipkartURLList />} user={user} />
+     
       <Footer />
     </Router>
   );
