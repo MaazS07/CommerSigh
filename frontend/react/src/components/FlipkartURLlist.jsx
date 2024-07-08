@@ -11,20 +11,25 @@ import FlipkartAddURL from "./FlipkartAddURL";
 import FlipkartModal from "./FlipkartModal";
 import { saveAs } from "file-saver";
 import ExcelJS from "exceljs";
+import { auth} from "./firebaseClient"; // Make sure to import useAuthState
+import { useAuthState } from "react-firebase-hooks/auth";
 
 const FlipkartURLList = () => {
   const [urls, setUrls] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedUrl, setSelectedUrl] = useState(null);
+  const [user] = useAuthState(auth); // Using useAuthState from Firebase
 
   useEffect(() => {
-    fetchUrls();
-  }, []);
+    if (user) {
+      fetchUrls();
+    }
+  }, [user]); // Fetch URLs whenever user changes
 
   const fetchUrls = async () => {
     try {
-      const response = await axios.get("http://localhost:3000/api/flipkart");
+      const response = await axios.get(`http://localhost:3000/api/flipkart/${user.uid}`); // Assuming user.uid is used for userId
       setUrls(response.data);
       setLoading(false);
     } catch (error) {
@@ -33,7 +38,6 @@ const FlipkartURLList = () => {
       toast.error("Failed to fetch URLs. Please try again.");
     }
   };
-
   const handleDelete = async (id) => {
     try {
       await axios.delete(`http://localhost:3000/api/flipkart/${id}`);
@@ -105,11 +109,8 @@ const FlipkartURLList = () => {
       <div className="bg-gradient-to-r from-white to-yellow-50 min-h-screen py-8 font-sans">
         <Toaster position="top-right" />
         <div className="max-w-6xl mx-auto px-4">
-          <h1 className="text-4xl font-bold text-center mb-12 text-blue-900"
-          style={{ fontFamily: "Inconsolata", fontWeight: "700" }}>
-            Flipkart
-          </h1>
-          <div className="bg-white rounded-2xl shadow-2xl overflow-hidden">
+      
+          <div className="bg-white rounded-2xl shadow-2xl overflow-hidden mt-[15vh]">
             <div className="p-8">
               <FlipkartAddURL fetchUrls={fetchUrls} />
             </div>
@@ -117,7 +118,7 @@ const FlipkartURLList = () => {
               <div className="flex justify-end mb-4">
                 <button
                   onClick={exportToExcel}
-                  className="m-10 mb-0 flex items-center bg-yellow-500  px-6 py-3 rounded-full hover:bg-blue-400 focus:outline-none transition duration-300 ease-in-out transform hover:scale-105 shadow-lg text-white font-bolder"
+                  className="m-10 mb-0 flex items-center bg-yellow-500 px-6 py-3 rounded-full hover:bg-blue-400 focus:outline-none transition duration-300 ease-in-out transform hover:scale-105 shadow-lg text-white font-bolder"
                 >
                   <DocumentDownloadIcon className="h-6 w-6 mr-2" />
                   Export to Excel
@@ -130,9 +131,8 @@ const FlipkartURLList = () => {
                 Added Products
               </h2>
               {loading ? (
-                  <div className="flex items-center justify-center h-64">
-                   <div className="w-24 h-24 border-4 border-blue-800 border-t-transparent rounded-full animate-spin"></div>
-                  
+                <div className="flex items-center justify-center h-64">
+                  <div className="w-24 h-24 border-4 border-blue-800 border-t-transparent rounded-full animate-spin"></div>
                 </div>
               ) : (
                 <ul className="divide-y divide-gray-200">

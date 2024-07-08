@@ -11,20 +11,27 @@ import AmazonModal from "./AmazonModal";
 import { saveAs } from "file-saver";
 import ExcelJS from "exceljs";
 import AddURL from "./AmazonAddUrl";
+import { auth} from "./firebaseClient"; // Make sure to import useAuthState
+import { useAuthState } from "react-firebase-hooks/auth";
 
 const AmazonURLList = () => {
   const [urls, setUrls] = useState([]);
   const [loading, setLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedUrl, setSelectedUrl] = useState(null);
+  const [user] = useAuthState(auth); 
 
   useEffect(() => {
-    fetchUrls();
-  }, []);
+    if(user)
+    {
+      fetchUrls();
+    }
+    
+  }, [user]);
 
   const fetchUrls = async () => {
     try {
-      const response = await axios.get("http://localhost:3000/api/urls");
+      const response = await axios.get(`http://localhost:3000/api/urls/${user.uid}`);
       setUrls(response.data);
       setLoading(false);
     } catch (error) {
@@ -107,11 +114,9 @@ const AmazonURLList = () => {
     <>
       <div className="bg-gradient-to-r from-gray-900 to-gray-800 min-h-screen py-8 font-sans">
         <Toaster position="top-right" />
-        <div className="max-w-6xl mx-auto px-4">
-          <h1 className="text-4xl font-bold text-center mb-12 text-yellow-500">
-            Amazon
-          </h1>
-          <div className="bg-gray-800 rounded-2xl shadow-2xl overflow-hidden">
+        <div className="max-w-6xl mx-auto px-4 ">
+         
+          <div className="bg-gray-800 rounded-2xl shadow-2xl overflow-hidden mt-[15vh]">
             <div className="p-8">
               <AddURL fetchUrls={fetchUrls} />
             </div>

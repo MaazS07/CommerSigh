@@ -5,16 +5,32 @@ const cheerio = require('cheerio');
 const Url = require('../model/Url');
 
 // Get all URLs and perform scraping
-router.get('/', async (req, res) => {
+
+const authenticateUser = (req, res, next) => {
+    const { userId } = req.params; // Assuming userId is passed as a URL parameter
+    if (!userId) {
+      return res.status(401).json({ message: 'User ID is required' });
+    }
+    req.userId = userId;
+    next();
+  };
+
+router.get('/:userId', authenticateUser, async (req, res) => {
+    const { userId } = req.params;
     try {
         const urls = await Url.find();
 
         for (let urlObj of urls) {
             try {
                 const response = await axios.get(urlObj.url, {
-                    headers: {
-                        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
-                    }
+                    // headers: {
+                    //     "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"
+                    //     ,
+                    //     "Accept-Language": "en-US,en;q=0.5",
+                    //     "Referer": "https://www.flipkart.com/",
+                    //     "DNT": "1",
+                    //     "Connection": "keep-alive"
+                    // }
                 });
 
                 if (response.status === 200) {
@@ -30,15 +46,23 @@ router.get('/', async (req, res) => {
                         price,
                         rating,
                         availability,
-                        createdAt: new Date()
                     };
-
+                    
+                    // Function to compare objects without considering the createdAt field
+                    const isDataDifferent = (newData, oldData) => {
+                        return newData.title !== oldData.title ||
+                               newData.price !== oldData.price ||
+                               newData.rating !== oldData.rating ||
+                               newData.availability !== oldData.availability;
+                    };
+                    
                     // Check if there's existing data and if it's different from the new data
-                    if (urlObj.data.length === 0 || 
-                        JSON.stringify(newData) !== JSON.stringify(urlObj.data[urlObj.data.length - 1])) {
-                        
-                        // If it's different, add the new data
-                        urlObj.data.push(newData);
+                    if (urlObj.data.length === 0 || isDataDifferent(newData, urlObj.data[urlObj.data.length - 1])) {
+                        // If it's different, add the new data with the current timestamp
+                        urlObj.data.push({
+                            ...newData,
+                            createdAt: new Date()
+                        });
                         await urlObj.save();
                     }
                 } else {
@@ -50,7 +74,7 @@ router.get('/', async (req, res) => {
             }
         }
 
-        const updatedUrls = await Url.find();
+        const updatedUrls = await Url.find({userId});
         res.json(updatedUrls);
     } catch (err) {
         console.error('Error in GET /:', err.message);
@@ -60,23 +84,29 @@ router.get('/', async (req, res) => {
 
 // Add a new URL
 router.post('/', async (req, res) => {
-    const { url } = req.body;
+    const { url, userId } = req.body;
 
-    if (!url) {
-        return res.status(400).json({ message: 'URL is required' });
+    if (!url || !userId) {
+        return res.status(400).json({ message: 'URL and userId are required' });
     }
 
     try {
-        const existingUrl = await Url.findOne({ url });
+        // Change this line
+        const existingUrl = await Url.findOne({ url, userId });
         if (existingUrl) {
-            return res.status(400).json({ message: 'URL already exists' });
+            return res.status(400).json({ message: 'URL already exists for this user' });
         }
 
-        const newUrl = new Url({ url });
+        // Create and save the new URL for the user
+        const newUrl = new Url({ url, userId });
         await newUrl.save();
         res.status(201).json(newUrl);
     } catch (err) {
-        res.status(400).json({ message: err.message });
+        if (err.code === 11000) {
+            // Handle the duplicate key error
+            return res.status(400).json({ message: 'URL already exists for this user' });
+        }
+        res.status(500).json({ message: 'An error occurred while processing your request' });
     }
 });
 
@@ -201,11 +231,13 @@ router.post('/ranking', async (req, res) => {
 
             const response = await axios.get(searchUrl, {
                 headers: {
-                    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36",
                     "Accept-Language": "en-US,en;q=0.5",
                     "Referer": "https://www.amazon.com/",
                     "DNT": "1",
-                    "Connection": "keep-alive"
+                    "Connection": "keep-alive",
+                    "Upgrade-Insecure-Requests": "1",
+                    "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8",
+                    "Accept-Encoding": "gzip, deflate, br"
                 }
             });
 
