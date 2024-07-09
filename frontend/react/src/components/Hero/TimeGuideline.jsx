@@ -8,7 +8,7 @@ const TimelineGuide = () => {
 
   const steps = [
     { 
-      title: 'Login to E-Scrape', 
+      title: 'Login to CommerSigh', 
       description: 'Create an account or log in to your existing account.'
     },
     { 
@@ -27,6 +27,14 @@ const TimelineGuide = () => {
       title: 'Download Excel File', 
       description: 'Once you have all the products you need, download the Excel file with the listed products.'
     },
+    { 
+      title: 'Click to View Product Rank', 
+      description: 'Enter a keyword and view the rank of your product based on the input keyword.'
+    },
+    { 
+      title: 'Top 5 Products on Search', 
+      description: 'On search, view the top 5 products listed in the modal on your right.'
+    }
   ];
 
   useEffect(() => {
@@ -51,7 +59,7 @@ const TimelineGuide = () => {
   }, [controls]);
 
   return (
-    <div className="flex flex-col lg:flex-row" ref={ref}>
+    <div className="flex flex-col lg:flex-row p-4 rounded-md border-t-transparent from-gray-900 via-black to-purple-700" ref={ref}>
       <div className="w-full lg:w-2/3 relative pr-8">
         <div className="absolute left-8 top-0 bottom-0 w-1 bg-yellow-400/30"></div>
         {steps.map((step, index) => (
@@ -66,12 +74,12 @@ const TimelineGuide = () => {
             }}
             transition={{ duration: 0.5, delay: index * 0.2 }}
           >
-            <div className="flex-shrink-0 w-16 h-16 rounded-full bg-yellow-400 border-4 border-gray-800 shadow-lg z-10 flex items-center justify-center text-xl font-bold text-gray-900">
+            <div className="flex-shrink-0 w-16 h-16 rounded-full bg-yellow-400 border-4 border-gray-800 shadow-lg z-10 flex items-center justify-center text-xl font-bold text-gray-900 italic">
               {index + 1}
             </div>
             <div className="ml-8 flex-grow">
-              <h3 className="text-2xl font-semibold text-yellow-400 mb-2">{step.title}</h3>
-              <p className="text-gray-300">{step.description}</p>
+              <h3 className="text-2xl font-semibold text-yellow-400 mb-2 italic">{step.title}</h3>
+              <p className="text-gray-300 italic">{step.description}</p>
             </div>
           </motion.div>
         ))}
@@ -80,7 +88,7 @@ const TimelineGuide = () => {
         <motion.img 
           src={timeline} 
           alt="Timeline illustration" 
-          className="w-full max-w-md h-auto object-cover rounded-lg shadow-2xl"
+          className="w-full max-w-md h-[60vh] object-cover rounded-lg"
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.5 }}

@@ -4,7 +4,7 @@ import { auth } from './firebaseClient';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { FaHome, FaAmazon, FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import { SiFlipkart } from 'react-icons/si';
-import { MdInsights } from 'react-icons/md'; // Import MdInsights icon
+import { MdInsights } from 'react-icons/md';
 import { toast, Toaster } from 'react-hot-toast';
 
 const Navbar = () => {
@@ -53,19 +53,20 @@ const Navbar = () => {
       case 'flipkart':
         return 'bg-gradient-to-r from-flipkart-dark to-flipkart-light';
       default:
-        return 'bg-gradient-to-r from-black to-yellow-600';
+        return 'from-gray-900 via-black to-purple-700';
     }
   };
 
   return (
-    <nav className= "text-white p-4 w-full fixed top-0 z-50">
-      <div className={`${getNavbarStyle()}container mx-auto flex justify-between items-center w-[70%] mt-4 rounded-full shadow-lg px-6 py-3 bg-opacity-80 backdrop-blur-md`}>
+    <nav className="text-white p-4 w-full fixed top-0 z-40">
+      <div className={`${getNavbarStyle()} container mx-auto flex justify-between items-center rounded-full shadow-lg px-4 py-2 md:px-6 md:py-3 bg-opacity-80 backdrop-blur-md w-full md:w-[70%]`}>
         <Link
           to="/"
-          className="flex items-center text-3xl  bg-clip-text text-transparent bg-gradient-to-r from-slate-400 to-white font-extrabold"
+          className="flex items-center text-xl md:text-3xl bg-clip-text text-transparent bg-gradient-to-r from-slate-400 to-white font-extrabold"
         >
-          <MdInsights className="mr-2  text-white" /> {/* MdInsights icon added here */}
-          CommerSigh
+          <MdInsights className="mr-2 text-white" style={{ fontFamily: "Inconsolata", fontWeight: "900" }}/>
+          <span className="hidden md:inline">CommerSigh</span>
+          <span className="md:hidden">CS</span>
         </Link>
 
         {/* Desktop menu */}
@@ -101,13 +102,12 @@ const Navbar = () => {
         {/* Mobile menu button */}
         <div className="md:hidden flex items-center">
           {user && (
-            <div className="flex items-center mr-4 bg-opacity-20 bg-white rounded-full p-2">
+            <div className="flex items-center mr-2">
               <img
                 src={user.photoURL}
                 alt="Profile"
-                className="w-8 h-8 rounded-full border-2 border-yellow-500 mr-2"
+                className="w-8 h-8 rounded-full border-2 border-yellow-500"
               />
-              <span className="text-sm font-semibold">{user.displayName}</span>
             </div>
           )}
           <button onClick={() => setIsOpen(!isOpen)} className="text-2xl">
@@ -118,8 +118,8 @@ const Navbar = () => {
 
       {/* Mobile sidebar */}
       {isOpen && (
-        <div className="md:hidden fixed inset-x-0 top-20 bg-black bg-opacity-90 text-white p-4 transform transition-all duration-300 ease-in-out">
-          <div className="flex flex-col space-y-6">
+        <div className="md:hidden fixed inset-x-0 top-[72px] bg-black bg-opacity-90 text-white p-4 transform transition-all duration-300 ease-in-out">
+          <div className="flex flex-col space-y-4">
             <NavItem to="/" icon={<FaHome size={24} />} text="Home" theme={theme} onClick={() => handleNavigation('/')} />
             <NavItem to="/amazon" icon={<FaAmazon size={24} />} text="Amazon" theme={theme} onClick={() => handleNavigation('/amazon')} />
             <NavItem to="/flipkart" icon={<SiFlipkart size={24} />} text="Flipkart" theme={theme} onClick={() => handleNavigation('/flipkart')} />
@@ -149,6 +149,8 @@ const Navbar = () => {
     </nav>
   );
 };
+
+// ... rest of the code remains the same
 
 const NavItem = ({ to, icon, text, theme, onClick }) => {
   const location = useLocation();

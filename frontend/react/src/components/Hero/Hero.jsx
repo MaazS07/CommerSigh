@@ -1,73 +1,84 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import LoginSignup from './LoginSignup';
 import TimelineGuide from './TimeGuideline';
-import heroimage from "../assets/main_hero.png";
-import { motion } from 'framer-motion';
+import heroImage from "../assets/main_hero.png";
+import { motion, useAnimation } from 'framer-motion';
 
 const HeroPage = () => {
+  const controls = useAnimation();
+
+  useEffect(() => {
+    controls.start({
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.8, ease: "easeOut" }
+    });
+  }, [controls]);
+
   return (
-    <div className="min-h-screen bg-gray-900 relative overflow-hidden">
+    <div className="bg-gradient-to-br pt-20 from-gray-900 via-black to-purple-700 min-h-screen text-white overflow-hidden">
       {/* Background Animation */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTYiIGhlaWdodD0iMTAwIiB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciPjxkZWZzPjxwYXR0ZXJuIGlkPSJncmlkIiB3aWR0aD0iNTYiIGhlaWdodD0iMTAwIiBwYXR0ZXJuVW5pdHM9InVzZXJTcGFjZU9uVXNlIj48cGF0aCBkPSJNIDU2IDAgTCAwIDAgMCAxMDAiIGZpbGw9Im5vbmUiIHN0cm9rZT0iI2ZmZDcwMCIgc3Ryb2tlLXdpZHRoPSIwLjUiLz48L3BhdHRlcm4+PC9kZWZzPjxyZWN0IHdpZHRoPSIxMDAlIiBoZWlnaHQ9IjEwMCUiIGZpbGw9InVybCgjZ3JpZCkiLz48L3N2Zz4=')] opacity-5"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-pink-500/10 animate-gradient"></div>
       </div>
 
       {/* Hero Section */}
       <div className="container mx-auto px-4 py-16 relative z-10">
-        <div className="flex flex-col lg:flex-row items-center justify-between">
-          {/* Login/Signup Component */}
-          <motion.div 
-            className="w-full lg:w-1/2 mb-12 lg:mb-0"
-            initial={{ opacity: 0, x: -50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-          >
+        <motion.div
+          initial={{ opacity: 0, y: 50 }}
+          animate={controls}
+          className="flex flex-col lg:flex-row items-center justify-between gap-12"
+        >
+          {/* Left Column: Content and CTA */}
+          <div className="lg:w-1/2 space-y-8 text-center lg:text-left">
+            <motion.h1
+              className="text-6xl sm:text-7xl lg:text-9xl pl-0 lg:pl-15 font-extrabold leading-tight bg-clip-text bg-gradient-to-r text-transparent from-white via-blue-100 to-white"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.2, duration: 0.8 }}
+              style={{ fontFamily: "Wittgenstein", fontWeight: "700" }}
+            >
+              CommerSigh
+            </motion.h1>
             <LoginSignup />
-          </motion.div>
-          
-          {/* Image and Tagline */}
-          <motion.div 
-            className="w-full lg:w-1/2 flex flex-col items-center"
-            initial={{ opacity: 0, x: 50 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8 }}
-          >
-            <div className="relative w-full max-w-md h-[50vh] mb-8 overflow-hidden rounded-lg">
-              <img 
-                src={heroimage} 
-                alt="E-Scrape Hero" 
-                className="w-full h-full object-cover filter brightness-75 contrast-125 mix-blend-luminosity"
-              />
-              <div className="absolute inset-0 bg-gradient-to-r from-yellow-400/30 to-yellow-600/30 mix-blend-overlay"></div>
-            </div>
-            <motion.h3 
-              className="text-3xl font-bold text-center text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-yellow-200 mb-4"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.5 }}
-            >
-              Revolutionize Your E-Commerce Experience
-            </motion.h3>
             <motion.p
-              className="text-lg text-center text-gray-300"
+              className="text-3xl sm:text-4xl lg:text-5xl text-yellow-500 pl-0 lg:pl-15 pt-10 text-center lg:text-left"
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.7 }}
+              transition={{ delay: 0.4, duration: 0.8 }}
+              style={{ fontFamily: "cursive", fontWeight: "700" }}
             >
-              Scrape, analyze, and optimize your online shopping journey
+              Scrape Smarter, Sell Better
             </motion.p>
+          </div>
+
+          {/* Right Column: Hero Image (hidden on small screens) */}
+          <motion.div
+            className="hidden lg:block lg:w-1/2"
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.6, duration: 1, ease: "easeOut" }}
+          >
+            <img src={heroImage} alt="CommerSigh Hero" className="w-full h-auto rounded-lg" />
           </motion.div>
-        </div>
+        </motion.div>
       </div>
 
       {/* Timeline Guide */}
-      <hr className='' />
-      <div className="bg-gray-900 py-16">
+      <motion.section
+        className="py-16 relative"
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 1, duration: 0.8 }}
+      >
         <div className="container mx-auto px-4">
-          <h2 className="text-4xl font-bold text-center mb-12 text-yellow-400">How It Works</h2>
+          <h2 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-center mb-12 bg-clip-text text-transparent bg-gradient-to-r from-white to-gray-200"
+            style={{fontFamily:"Incosolata", fontWeight:"900"}}>
+            How It Works
+          </h2>
           <TimelineGuide />
         </div>
-      </div>
+      </motion.section>
     </div>
   );
 };

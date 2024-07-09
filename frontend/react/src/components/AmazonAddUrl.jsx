@@ -86,12 +86,15 @@ const AmazonAddURL = ({ fetchUrls }) => {
           },
         }}
       />
-     <div className="text-5xl font-bold mb-4 text-white flex items-center justify-center space-x-2"
-      style={{ fontFamily: "Inconsolata", fontWeight: "700" }}
-      >
-  <FaAmazon size={55} color="white" />
-  <span className='text-white'> | Amazon</span>
-</div>
+    <div className="flex items-center justify-center space-x-2 sm:space-x-4 mb-4 p-2">
+    <FaAmazon className="text-4xl sm:text-5xl md:text-6xl text-white" />
+    <div className="flex items-center">
+      <span className="text-white text-2xl sm:text-3xl md:text-4xl font-bold mx-2">|</span>
+      <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold text-white" style={{ fontFamily: "Inconsolata, monospace" }}>
+        Amazon
+      </h1>
+    </div>
+  </div>
 
       <form onSubmit={handleSubmit} className="flex items-center">
         <div className="relative flex-1 mr-2">

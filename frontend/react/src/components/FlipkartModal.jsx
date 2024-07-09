@@ -37,7 +37,7 @@ const FlipkartModal = ({ isOpen, onClose, title }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed z-10 inset-0 overflow-y-auto bg-black bg-opacity-50 backdrop-blur-sm">
+    <div className="fixed z-50 inset-0 overflow-y-auto bg-black bg-opacity-50 backdrop-blur-sm">
       <div className="flex items-center justify-center p-5 min-h-screen">
         <div className={`bg-white w-full ${expanded ? 'max-w-6xl' : 'md:max-w-2xl'} mx-auto rounded-2xl shadow-2xl overflow-hidden border border-gray-200`}>
           <div className="relative p-8 flex flex-col md:flex-row">

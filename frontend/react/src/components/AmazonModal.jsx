@@ -35,10 +35,10 @@ const AmazonModal = ({ isOpen, onClose, title }) => {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed z-10 inset-0 overflow-y-auto bg-black bg-opacity-50 backdrop-blur-sm">
-      <div className="flex items-center justify-center p-5 min-h-screen">
-        <div className={`bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 w-full ${expanded ? 'max-w-6xl' : 'md:max-w-2xl'} mx-auto rounded-2xl shadow-2xl overflow-hidden border border-yellow-500`}>
-          <div className="relative p-8 flex flex-col md:flex-row">
+    <div className="fixed z-50 inset-0 overflow-y-auto bg-black bg-opacity-50 backdrop-blur-sm">
+      <div className="flex items-center justify-center p-5 min-h-screen ">
+        <div className={`bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 w-full ${expanded ? 'max-w-6xl' : 'md:max-w-2xl'} mx-auto rounded-2xl shadow-2xl overflow-hidden border border-yellow-500 z-50`}>
+          <div className="relative p-8 flex flex-col md:flex-row z-100">
             <button
               onClick={onClose}
               className="absolute top-4 right-4 text-yellow-500 hover:text-yellow-400 transition duration-300 hover:bg-red-600 hover:text-white hover:rounded-3xl"
