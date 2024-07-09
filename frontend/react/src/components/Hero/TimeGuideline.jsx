@@ -84,7 +84,7 @@ const TimelineGuide = () => {
           </motion.div>
         ))}
       </div>
-      <div className="w-full lg:w-1/3 lg:sticky lg:top-20 h-[60vh] flex justify-center items-center mt-8 lg:mt-0">
+      <div className="hidden lg:block w-1/3 lg:sticky lg:top-20 h-[60vh] flex justify-center items-center mt-8 lg:mt-0">
         <motion.img 
           src={timeline} 
           alt="Timeline illustration" 
