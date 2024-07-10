@@ -15,7 +15,7 @@ const AmazonModal = ({ isOpen, onClose, title }) => {
       title: title,
       keyword: inputValue
     };
-    axios.post('http://localhost:3000/api/urls/ranking', data)
+    axios.post('http://localhost:3000/api/amazon/ranking', data)
       .then(response => {
         const { rank, topProducts } = response.data;
         setRank(rank);

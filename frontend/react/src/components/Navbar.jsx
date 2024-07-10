@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { auth } from './firebaseClient';
+import { auth } from '../firebaseClient';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { FaHome, FaAmazon, FaChevronDown, FaChevronUp } from 'react-icons/fa';
 import { SiFlipkart } from 'react-icons/si';
@@ -51,7 +51,7 @@ const Navbar = () => {
       case 'amazon':
         return 'bg-gradient-to-r from-amazon-dark to-amazon-light';
       case 'flipkart':
-        return 'bg-gradient-to-r from-flipkart-dark to-flipkart-light';
+        return 'bg-gradient-to-r from-flipkart-dark to-yellow-400';
       default:
         return 'from-gray-900 via-black to-purple-700';
     }
@@ -86,16 +86,16 @@ const Navbar = () => {
                 <span className="text-sm text-black font-semibold">{user.displayName}</span>
                 <button
                   onClick={handleLogout}
-                  className="text-xs text-red-400 hover:text-red-300"
+                  className="text-xs text-red-400 font-bold hover:text-red-900"
                 >
                   Sign out
                 </button>
               </div>
             </div>
-          ) : (
-            <Link to="/" className="text-white hover:text-yellow-300 transition duration-300">
-              Sign In
-            </Link>
+          ) : (""
+            // <Link to="/" className="text-white hover:text-yellow-300 transition duration-300">
+            //   Sign In
+            // </Link>
           )}
         </div>
 

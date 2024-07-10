@@ -1,14 +1,13 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { auth } from './components/firebaseClient';
+import React from "react";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { useAuthState } from "react-firebase-hooks/auth";
+import { auth } from "./firebaseClient";
 
-import AmazonURLList from './components/AmazonURLlist';
-import FlipkartURLList from './components/FlipkartURLlist';
-import HeroPage from './components/Hero/Hero';
-import Navbar from './components/Navbar';
-import Footer from './components/Footer';
-import PrivateRoute from './components/PrivateRoutes'; // Ensure correct import path for PrivateRoute
+import AmazonURLList from "./components/AmazonURLlist";
+import FlipkartURLList from "./components/FlipkartURLlist";
+import HeroPage from "./components/Hero/Hero";
+import Navbar from "./components/Navbar";
+import Footer from "./components/Footer";
 
 function App() {
   const [user] = useAuthState(auth);
@@ -17,15 +16,11 @@ function App() {
     <Router>
       <Navbar />
       <Routes>
-        {/* Public route */}
         <Route path="/" element={<HeroPage />} />
-        
-        {/* Private routes */}
-        < Route path="/amazon" element={<AmazonURLList />} user={user} />
+        <Route path="/amazon" element={<AmazonURLList />} user={user} />
         <Route path="/flipkart" element={<FlipkartURLList />} user={user} />
-      
       </Routes>
-     
+
       <Footer />
     </Router>
   );

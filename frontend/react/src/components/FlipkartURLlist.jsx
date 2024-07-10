@@ -11,7 +11,7 @@ import FlipkartAddURL from "./FlipkartAddURL";
 import FlipkartModal from "./FlipkartModal";
 import { saveAs } from "file-saver";
 import ExcelJS from "exceljs";
-import { auth} from "./firebaseClient"; // Make sure to import useAuthState
+import { auth} from "../firebaseClient"; // Make sure to import useAuthState
 import { useAuthState } from "react-firebase-hooks/auth";
 
 const FlipkartURLList = () => {
@@ -116,10 +116,10 @@ const FlipkartURLList = () => {
             </div>
             <div className="border-t border-gray-200">
               <div className="flex justify-end mb-4">
-                <button
-                  onClick={exportToExcel}
-                  className="m-10 mb-0 flex items-center bg-yellow-500 px-6 py-3 rounded-full hover:bg-blue-400 focus:outline-none transition duration-300 ease-in-out transform hover:scale-105 shadow-lg text-white font-bolder"
-                >
+              <button
+              onClick={exportToExcel}
+              className="m-10 mb-0 flex items-center bg-gradient-to-r from-yellow-400 to-yellow-600 text-gray-900 px-6 py-3 rounded-full hover:from-yellow-500 hover:to-yellow-700 focus:outline-none transition duration-300 ease-in-out transform hover:scale-105 shadow-lg"
+            >
                   <DocumentDownloadIcon className="h-6 w-6 mr-2" />
                   Export to Excel
                 </button>

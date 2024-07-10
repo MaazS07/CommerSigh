@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import LoginSignup from './LoginSignup';
 import TimelineGuide from './TimeGuideline';
-import heroImage from "../assets/main_hero.png";
+import heroImage from "./assets/main_hero.png";
 import { motion, useAnimation } from 'framer-motion';
 
 const HeroPage = () => {
@@ -19,7 +19,7 @@ const HeroPage = () => {
     <div className="bg-gradient-to-br pt-20 from-gray-900 via-black to-purple-700 min-h-screen text-white overflow-hidden">
       {/* Background Animation */}
       <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-pink-500/10 animate-gradient"></div>
+        {/* <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-purple-500/10 to-pink-500/10 animate-gradient"></div> */}
       </div>
 
       {/* Hero Section */}
@@ -76,6 +76,7 @@ const HeroPage = () => {
             style={{fontFamily:"Incosolata", fontWeight:"900"}}>
             How It Works
           </h2>
+         
           <TimelineGuide />
         </div>
       </motion.section>

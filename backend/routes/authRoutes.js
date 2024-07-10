@@ -2,13 +2,13 @@ const express = require('express');
 const router = express.Router();
 const admin = require('../firebaseAdmin');
 const cookieParser = require('cookie-parser');
-const authMiddleware = require('../middleware/authMiddleware'); // Assuming authMiddleware is correctly implemented
+const authMiddleware = require('../middleware/authMiddleware'); 
 
 router.use(cookieParser());
 
-router.post('/login', async (req, res) => {
+router.post('/', async (req, res) => {
   const idToken = req.body.idToken;
-  const expiresIn = 60 * 60 * 24 * 5 * 1000; // 5 days
+  const expiresIn = 60 * 60 * 24 * 60 * 1000; // 2 months
 
   try {
     const sessionCookie = await admin.auth().createSessionCookie(idToken, { expiresIn });
@@ -21,7 +21,7 @@ router.post('/login', async (req, res) => {
   }
 });
 
-router.post('/logout', (req, res) => {
+router.post('/', (req, res) => {
   res.clearCookie('session');
   res.status(200).send('Logout successful');
 });

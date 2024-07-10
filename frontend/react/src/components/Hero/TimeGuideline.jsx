@@ -1,6 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { motion, useAnimation } from 'framer-motion';
-import timeline from "../assets/timeline.png"
+import timeline from "./assets/timeline.png"
 
 const TimelineGuide = () => {
   const controls = useAnimation();
@@ -59,7 +59,7 @@ const TimelineGuide = () => {
   }, [controls]);
 
   return (
-    <div className="flex flex-col lg:flex-row p-4 rounded-md border-t-transparent from-gray-900 via-black to-purple-700" ref={ref}>
+    <div className="flex flex-col lg:flex-row p-4 rounded-md  from-gray-900 via-black to-purple-700" ref={ref}>
       <div className="w-full lg:w-2/3 relative pr-8">
         <div className="absolute left-8 top-0 bottom-0 w-1 bg-yellow-400/30"></div>
         {steps.map((step, index) => (
@@ -84,7 +84,7 @@ const TimelineGuide = () => {
           </motion.div>
         ))}
       </div>
-      <div className="hidden lg:block w-1/3 lg:sticky lg:top-20 h-[60vh] flex justify-center items-center mt-8 lg:mt-0">
+      <div className="hidden lg:block w-1/3 lg:sticky lg:top-20 h-[60vh] flex justify-center items-center mt-8 lg:mt-20">
         <motion.img 
           src={timeline} 
           alt="Timeline illustration" 

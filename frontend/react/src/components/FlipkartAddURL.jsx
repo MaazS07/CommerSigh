@@ -4,7 +4,7 @@ import { toast, Toaster } from 'react-hot-toast';
 import { FiCheckCircle, FiXCircle } from 'react-icons/fi';
 import { MdAddToPhotos } from "react-icons/md";
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { auth } from './firebaseClient'; // Ensure this points to your Firebase configuration
+import { auth } from '../firebaseClient'; // Ensure this points to your Firebase configuration
 import { SiFlipkart } from 'react-icons/si';
 
 const FlipkartAddURL = ({ fetchUrls }) => {

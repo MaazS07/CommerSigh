@@ -4,7 +4,7 @@ import { toast, Toaster } from 'react-hot-toast';
 import { FiCheckCircle, FiXCircle, FiSearch } from 'react-icons/fi';
 import { MdAddToPhotos } from "react-icons/md";
 import { useAuthState } from 'react-firebase-hooks/auth';
-import { auth } from './firebaseClient'
+import { auth } from '../firebaseClient'
 import { FaAmazon } from 'react-icons/fa';
 
 const AmazonAddURL = ({ fetchUrls }) => {
@@ -23,7 +23,7 @@ const AmazonAddURL = ({ fetchUrls }) => {
       return;
     }
     try {
-      const response = await axios.post('http://localhost:3000/api/urls', { url ,userId:user.uid});
+      const response = await axios.post('http://localhost:3000/api/amazon', { url ,userId:user.uid});
       console.log(response.data);
       setUrl('');
       fetchUrls(user.uid);

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { auth, googleProvider, signInWithPopup } from '../firebaseClient';
+import { auth, googleProvider, signInWithPopup } from '../../firebaseClient';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { FcGoogle } from 'react-icons/fc';
